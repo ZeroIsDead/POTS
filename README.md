@@ -2,7 +2,7 @@
 
 ## Outline
 
-Domain - Business Rule (Entities) ex. SM, PM, IM
-POTS - main file that runs
-data - all Data Related Class and Files
-views - all Classes that uses Swing (Calls Domain, data, etc that help create view)
+Domain - Business Rule (Entities) ex. SM, PM, IM <br>
+POTS - main file that runs <br>
+data - all Data Related Classes and Files <br>
+views - all Classes that use Swing (Calls Domain, data, etc that help create view) <be>
