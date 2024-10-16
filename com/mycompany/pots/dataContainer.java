@@ -18,5 +18,4 @@ public interface dataContainer {
     public List<String> getColumn(String Field);
     public List<String> getFieldName();
     public List<List<String>> FitlerData(String Field, String Value);
-    public List<String> queryFieldStrict(String key, String Field);
 }
