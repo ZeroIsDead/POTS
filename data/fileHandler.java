@@ -4,33 +4,33 @@
  */
 package data;
 
-import com.mycompany.pots.dataWriter;
-import com.mycompany.pots.dataContainer;
 import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  *
  * @author JONATHAN
  */
-public class fileHandler implements dataWriter, dataContainer {
-    private String filePath;
+public class FileHandler implements DataWriter, DataContainer {
     private File file;
     private FileWriter writer;
     private Scanner reader;
     private List<List<String>> data;
     private List<String> fields;
     
-    public fileHandler() {
+    public FileHandler() {
         this.data = new ArrayList<>();
     }
     
-    public fileHandler(String filePath) {
+    public FileHandler(String filePath) {
         this.data = new ArrayList<>();
         this.setFile(filePath);
     }
@@ -48,7 +48,6 @@ public class fileHandler implements dataWriter, dataContainer {
     @Override
     public final void setFile(String filePath) {
         try {
-            this.filePath = filePath;
             this.file = new File(filePath);
             if (!this.file.exists()) {
                 this.file.createNewFile();
@@ -79,14 +78,10 @@ public class fileHandler implements dataWriter, dataContainer {
     }
 
     @Override
-    public void appendData(List<List<String>> Data) {
+    public void appendData(List<String> Data) {
         try {
-            String parsedRowData = new String();
-            for (List<String> rowData : Data) {
-                parsedRowData = this.parseData(rowData) + "\n";
-            }
-            
-            this.writer.append(parsedRowData);
+            String parsedRowData = this.parseData(Data) + "\n";
+            this.writer.append(parsedRowData); //Wrong
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -242,19 +237,32 @@ public class fileHandler implements dataWriter, dataContainer {
     }
 
     @Override
-    public List<List<String>> FitlerData(String Field, String Value) {
+    public List<List<String>> FitlerData(List<String> Fields, List<String> Values) {
         List<List<String>> filteredData = new ArrayList<>();
         
-        List<String> columnData = this.getColumn(Field);
+        List<Integer> indexes = new ArrayList<>();
+        
+//        Creates a List of n 1s;
+        indexes.addAll(Collections.nCopies(Fields.size(), 1));
         
         
-        int index = 0;
-        for (String currentData : columnData) {
-            if (currentData.equals(Value)) {
-                filteredData.add(this.data.get(index));
-            }
+//        If Value in the Corresponding Field and Row is Different, Then Remove
+        for (int i = 0; i < Fields.size(); i++) {
+            List<String> ColumnData = this.getColumn(Fields.get(i));
             
-            index++;
+            for (int j = 0; j < ColumnData.size(); j++) {
+                if (!ColumnData.get(j).equals(Values.get(i))) {
+                    indexes.remove(j);
+                    indexes.add(j, 0);
+                }
+            } 
+        }
+        
+        
+        for (int i = 0; i < indexes.size(); i++) {
+            if (indexes.get(i) == 1) {
+                filteredData.add(this.data.get(i));
+            }
         }
         
         return filteredData;
