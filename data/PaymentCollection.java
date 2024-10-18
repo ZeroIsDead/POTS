@@ -10,10 +10,10 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public interface PaymentCollection {
+public class PaymentCollection extends ItemCollection {
     public Payment createPayment(String name);
     public List<Payment> getAllPayment();
     public Payment searchPayment(String ID);
     public List<Payment> filterPayment(List<String> Fields, List<String> Values);
-    public List<Payment> sortPayment(List<String> Fields, List<String> Values);
+    public List<Payment> sortPayment(String Field);
 }

@@ -15,5 +15,5 @@ public abstract class Item {
     public abstract void setDetail(List<String> Details);
     public abstract List<String> getDetail();
     public abstract void deleteContainer();
-    
+    public abstract List<String> getFieldName();
 }

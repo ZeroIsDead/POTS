@@ -10,11 +10,11 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public interface ProductCollection {
+public class ProductCollection extends ItemCollection {
     public Product createProduct(String name);
     public List<Product> getAllProduct();
     public Product searchProduct(String ID);
     public List<Product> filterProduct(List<String> Fields, List<String> Values);
-    public List<Product> sortProduct(List<String> Fields, List<String> Values);
+    public List<Product> sortProduct(String Field);
     public List<Product> sortProductByUrgency();
 }

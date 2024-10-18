@@ -4,16 +4,60 @@
  */
 package data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author JONATHAN
  */
-public interface POCollection {
-    public PO createPO(String name);
-    public List<PO> getAllPO();
-    public PO searchPO(String ID);
-    public List<PO> filterPO(List<String> Fields, List<String> Values);
-    public List<PO> sortPO(List<String> Fields, List<String> Values);
+public class POCollection extends ItemCollection{
+
+    @Override
+    public Object create(List Details) {
+        PO newPO = new PO();
+        newPO.setDetail(Details);
+        return newPO;
+    }
+
+    @Override
+    public Object search(String ID) {
+        List<PO> POList = this.getAll();
+        for (PO  : POList) {
+            if (true) {
+                return Item;
+            }
+        }
+        return new PO();
+    }
+    
+    
+    public Object
+        public List<Type> sort (String Field) {
+        List<Type> ItemList = this.getAll();
+        List<Type> SortedItemList = new ArrayList<>();
+        Type FirstItem = ItemList.removeFirst();
+        SortedItemList.add(FirstItem);
+                
+                
+        for (Type currentItem : ItemList) {
+            List<String> currentPODetail;
+            currentPODetail = currentItem.getDetail();
+            int WantedFieldIndex = currentItem.getFieldName().indexOf(Field);
+            for (int i = 0; i < SortedPOList.size(); i++) {
+                PO CurrentSortedPO = SortedPOList.get(i);
+                String FieldValueOfCurrentSortedPO = CurrentSortedPO.getDetail().get(WantedFieldIndex);
+                String FieldValueOfCurrentPO = currentPODetail.get(WantedFieldIndex);
+                
+//                Sorting
+                if (FieldValueOfCurrentPO.compareTo(FieldValueOfCurrentSortedPO) < 0) {
+                    SortedPOList.add(i, currentPO);
+                }
+            }
+        }
+        
+        
+        return SortedPOList;
+    }
+    
 }

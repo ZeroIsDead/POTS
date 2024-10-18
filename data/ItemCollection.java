@@ -10,11 +10,11 @@ import java.util.List;
 /**
  *
  * @author JONATHAN
+ * @param <Type>
  */
-public class ItemCollection implements POCollection, PRCollection, PaymentCollection, ProductCollection, PurchaseCollection, SalesCollection, SupplierCollection {
+public abstract class ItemCollection<Type> {
     DataWriter writer;
     DataContainer container;
-    
     
     public ItemCollection() {
         this.writer = new FileHandler();
@@ -23,228 +23,41 @@ public class ItemCollection implements POCollection, PRCollection, PaymentCollec
     
 //   PO
 
-    @Override
-    public PO createPO(String name) {
-        PO newPO = new PO();
-        this.writer.appendData(newPO.getDetail());
-        return newPO;
-    }
+    public abstract Type create(List<String> Details);
 
-    @Override
-    public List<PO> getAllPO() {
-        List<PO> POList = new ArrayList<>();
-        
-        String filePath = "";
-        
-        this.container.setFile(filePath);
+    public List<Type> getAll() {
+        List<Type> ItemList = new ArrayList<>();
         
         List<List<String>> POData = this.container.getData();
         
         for (List<String> RowData : POData) {
-            PO newPO = new PO();
-            newPO.setDetail(RowData);
-            POList.add(newPO);
+            Type newItem = this.create(RowData);
+            ItemList.add(newItem);
         }
         
-        return POList;
+        return ItemList;
     }
 
-    @Override
-    public PO searchPO(String ID) {
-        List<PO> POList = this.getAllPO();
-        for (PO currentPO : POList) {
+    public Type search(String ID) {
+        List<Type> ItemList = this.getAll();
+        for (Type Item : ItemList) {
             if (true) {
-                return currentPO;
+                return Item;
             }
         }
-        return new PO();
+        return null;
     }
 
-    @Override
-    public List<PO> filterPO(List<String> Fields, List<String> Values) {
+    public List<Type> filter(List<String> Fields, List<String> Values) {
         List<List<String>> PODetailList = this.container.FitlerData(Fields, Values);
         
-        List<PO> POList = new ArrayList<>();
+        List<Type> ItemList = new ArrayList<>();
         
         for (List<String> PODetail : PODetailList) {
-            PO newPO = new PO();
-            newPO.setDetail(PODetail);
-            POList.add(newPO);
+            Type newItem = this.create(PODetail);
+            ItemList.add(newItem);
         }
         
-        return POList;
-    }
-
-    @Override
-    public List<PO> sortPO (List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
- 
-//    PR
-
-    @Override
-    public Item createPR(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<PR> getAllPR() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public PR searchPR(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<PR> filterPR(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<PR> sortPR(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    Payment
-
-    @Override
-    public Payment createPayment(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Payment> getAllPayment() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Payment searchPayment(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Payment> filterPayment(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Payment> sortPayment(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    Product
-
-    @Override
-    public Product createProduct(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Product> getAllProduct() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Product searchProduct(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Product> filterProduct(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Product> sortProduct(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-    
-    @Override
-    public List<Product> sortProductByUrgency() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    Purchase
-
-    @Override
-    public Purchase createPurchase(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Purchase> getAllPurchase() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Purchase searchPurchase(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Purchase> filterPurchase(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Purchase> sortPurchase(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    Sales
-
-    @Override
-    public Sales createSales(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Sales> getAllSales() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Sales searchSales(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Sales> filterSales(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Sales> sortSales(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-//    Supplier
-
-    @Override
-    public Supplier createSupplier(String name) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Supplier> getAllSupplier() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public Supplier searchSupplier(String ID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Supplier> filterSupplier(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public List<Supplier> sortSupplier(List<String> Fields, List<String> Values) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
+        return ItemList;
+    }        
 }

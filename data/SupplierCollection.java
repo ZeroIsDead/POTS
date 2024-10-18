@@ -10,10 +10,10 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public interface SupplierCollection {
+public class SupplierCollection extends ItemCollection{
     public Supplier createSupplier(String name);
     public List<Supplier> getAllSupplier();
     public Supplier searchSupplier(String ID);
     public List<Supplier> filterSupplier(List<String> Fields, List<String> Values);
-    public List<Supplier> sortSupplier(List<String> Fields, List<String> Values);
+    public List<Supplier> sortSupplier(String Field);
 }

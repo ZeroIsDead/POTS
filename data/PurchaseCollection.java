@@ -10,10 +10,10 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public interface PurchaseCollection {
+public class PurchaseCollection extends ItemCollection {
     public Purchase createPurchase(String name);
     public List<Purchase> getAllPurchase();
     public Purchase searchPurchase(String ID);
     public List<Purchase> filterPurchase(List<String> Fields, List<String> Values);
-    public List<Purchase> sortPurchase(List<String> Fields, List<String> Values);
+    public List<Purchase> sortPurchase(String Field);
 }
