@@ -11,19 +11,9 @@ import java.util.List;
  * @author JONATHAN
  */
 public class User extends Item {
-    private List<String> Details;
+    public User (List<String> FieldNames, List<String> Details) {
+        super(FieldNames, Details);
+    }
     
-    public User (List<String> Details) {
-        this.Details = Details;
-    }
-
-    @Override
-    public void setDetail(List<String> Details) {
-        this.Details = Details;
-    }
-
-    @Override
-    public List<String> getDetail() {
-        return this.Details;
-    }
+//    Add get and sets
 }

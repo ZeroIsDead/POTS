@@ -24,8 +24,5 @@ public class POTS {
         System.out.println(c.getItem("1").getDetail());
         
         
-//        c.filter(Fields, Values);
-        
-        
     }
 }

@@ -42,25 +42,25 @@ public class ItemFactory {
     public Item createItem(List<String> Details) {
         switch (this.Type) {
             case "PO" -> {
-                return new PO(Details);
+                return new PO(this.FieldNames, Details);
             }
             case "PR" -> {
-                return new PR(Details);
+                return new PR(this.FieldNames, Details);
             }
             case "Payment" -> {
-                return new Payment(Details);
+                return new Payment(this.FieldNames, Details);
             }
             case "Product" -> {
-                return new Product(Details);
+                return new Product(this.FieldNames, Details);
             }
             case "Purchase" -> {
-                return new Purchase(Details);
+                return new Purchase(this.FieldNames, Details);
             }
             case "Sales" -> {
-                return new Sales(Details);
+                return new Sales(this.FieldNames, Details);
             }
             case "Supplier" -> {
-                return new Supplier(Details);
+                return new Supplier(this.FieldNames, Details);
             }
             default -> {
                 return null;

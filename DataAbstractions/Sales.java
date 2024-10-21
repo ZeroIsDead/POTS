@@ -11,20 +11,7 @@ import java.util.List;
  * @author JONATHAN
  */
 public class Sales extends Item {
-private List<String> Details;
-    
-    public Sales (List<String> Details) {
-        this.Details = Details;
+    public Sales (List<String> FieldNames, List<String> Details) {
+        super(FieldNames, Details);
     }
-
-    @Override
-    public void setDetail(List<String> Details) {
-        this.Details = Details;
-    }
-
-    @Override
-    public List<String> getDetail() {
-        return this.Details;
-    }
-
 }

@@ -11,20 +11,8 @@ import java.util.List;
  * @author JONATHAN
  */
 public class PO extends Item {
-    private List<String> Details;
     
-    public PO (List<String> Details) {
-        this.Details = Details;
+    public PO (List<String> FieldNames, List<String> Details) {
+        super(FieldNames, Details);
     }
-
-    @Override
-    public void setDetail(List<String> Details) {
-        this.Details = Details;
-    }
-
-    @Override
-    public List<String> getDetail() {
-        return this.Details;
-    }
-
 }

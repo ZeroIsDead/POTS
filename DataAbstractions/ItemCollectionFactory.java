@@ -31,6 +31,7 @@ public class ItemCollectionFactory {
         ItemFactory Factory = new ItemFactory(Type, reader, writer);
         
         List<List<String>> ItemDetailList = reader.getData();
+        List<String> ItemFields = reader.getFieldName();
 
 
         switch (Type) {
@@ -40,7 +41,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    PO newPO = new PO(RowData);
+                    PO newPO = new PO(ItemFields, RowData);
                     
                     POList.add(newPO);
                 }
@@ -51,7 +52,7 @@ public class ItemCollectionFactory {
                 List<PR> PRList = new ArrayList<>();
                 
                 for (List<String> RowData : ItemDetailList) {
-                    PR newPR = new PR(RowData);
+                    PR newPR = new PR(ItemFields, RowData);
                     
                     PRList.add(newPR);
                 }
@@ -63,7 +64,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    Payment newPayment = new Payment(RowData);
+                    Payment newPayment = new Payment(ItemFields, RowData);
                     
                     PaymentList.add(newPayment);
                 }
@@ -76,7 +77,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    Product newProduct = new Product(RowData);
+                    Product newProduct = new Product(ItemFields, RowData);
                     
                     ProductList.add(newProduct);
                 }
@@ -88,7 +89,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    Purchase newPurchase = new Purchase(RowData);
+                    Purchase newPurchase = new Purchase(ItemFields, RowData);
                     
                     PurchaseList.add(newPurchase);
                 }
@@ -100,7 +101,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    Sales newSales = new Sales(RowData);
+                    Sales newSales = new Sales(ItemFields, RowData);
                     
                     SalesList.add(newSales);
                 }
@@ -112,7 +113,7 @@ public class ItemCollectionFactory {
                 
                 
                 for (List<String> RowData : ItemDetailList) {
-                    Supplier newSupplier = new Supplier(RowData);
+                    Supplier newSupplier = new Supplier(ItemFields, RowData);
                     
                     SupplierList.add(newSupplier);
                 }
