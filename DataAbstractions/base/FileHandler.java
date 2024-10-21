@@ -2,27 +2,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package data;
+package DataAbstractions.base;
 
+import java.io.BufferedReader;
 import java.util.List;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Scanner;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
+import java.io.FileReader;
 
 /**
  *
  * @author JONATHAN
  */
 public class FileHandler implements DataWriter, DataContainer {
-    private File file;
+    private String filePath;
     private FileWriter writer;
-    private Scanner reader;
+    private BufferedReader reader;
     private List<List<String>> data;
     private List<String> fields;
     
@@ -32,7 +32,7 @@ public class FileHandler implements DataWriter, DataContainer {
     
     public FileHandler(String filePath) {
         this.data = new ArrayList<>();
-        this.setFile(filePath);
+        this.setFilePath(filePath);
     }
     
     private String parseData(List<String> rowData) { 
@@ -44,32 +44,74 @@ public class FileHandler implements DataWriter, DataContainer {
         
         return parsedRowData;
     }
+    
+    private void openFileWriter() {
+        try {
+            this.writer = new FileWriter(this.filePath);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void closeFileWriter() {
+        try {
+            this.writer.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void openFileReader() {
+        try {
+            FileReader fileReader = new FileReader(this.filePath);
+            
+            this.reader = new BufferedReader(fileReader);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
+    
+    private void closeFileReader() {
+        try {
+            this.reader.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+    }
 
     @Override
-    public final void setFile(String filePath) {
+    public final void setFilePath(String filePath) {
         try {
-            this.file = new File(filePath);
-            if (!this.file.exists()) {
-                this.file.createNewFile();
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.createNewFile();
             }
-            this.reader = new Scanner(this.file);
-            this.writer = new FileWriter(filePath);
+            this.filePath = filePath;
         } catch (IOException e) {
             System.out.println("File Not Found!");
         }
         
         this.getFieldAndData();
     }
+    
+    @Override
+    public String getFilePath() {
+        return this.filePath;
+    }
 
     @Override
     public void writeData(List<List<String>> Data) {
         try {
+            this.openFileWriter();
+            
             String writeBuffer = new String();
             for (List<String> rowData : Data) {
                writeBuffer += this.parseData(rowData) + "\n";
             }
             
             this.writer.write(writeBuffer);
+            
+            this.closeFileWriter();
             
         } catch (IOException e) {
             System.out.println(e);
@@ -80,8 +122,12 @@ public class FileHandler implements DataWriter, DataContainer {
     @Override
     public void appendData(List<String> Data) {
         try {
+            this.openFileWriter();
+            
             String parsedRowData = this.parseData(Data) + "\n";
             this.writer.append(parsedRowData); //Wrong
+            
+            this.closeFileWriter();
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -138,10 +184,12 @@ public class FileHandler implements DataWriter, DataContainer {
             
             iterator++;
         }
+        
+        this.writeData(this.data);
     }
 
     @Override
-    public void deleteCompositeData(List<String> Keys) {
+    public void deleteCompositeData(List<String> Keys ) {
         int iterator = 0;
         for (List<String> rowData : this.data) {
             int numKeysFound = 0;
@@ -160,26 +208,34 @@ public class FileHandler implements DataWriter, DataContainer {
             
             iterator++;
         }
+        
+        this.writeData(this.data);
     }
     
     private void getFieldAndData() {
         List<List<String>> Data = new ArrayList<>();
         
-        if (this.reader.hasNextLine()) {
-            String unparsedFieldData = this.reader.nextLine();
-            
-            this.fields = Arrays.asList(unparsedFieldData.split(";"));
-        } else {return;}
+        this.openFileReader();
         
-        while (this.reader.hasNextLine()) {
-            String unparsedRowData = this.reader.nextLine();
-            
-            List<String> rowData = Arrays.asList(unparsedRowData.split(";"));
-            
-            Data.add(rowData);
+        try {
+            String unparsedData;
+            if ( ( unparsedData = this.reader.readLine()) != null) {
+
+                this.fields = Arrays.asList(unparsedData.split(";"));
+            } else {return;}
+
+            while ( ( unparsedData = this.reader.readLine()) != null ) {
+                List<String> rowData = Arrays.asList(unparsedData.split(";"));
+
+                Data.add(rowData);
+            }
+
+            this.data = Data;
+        } catch (IOException e) {
+            System.out.println(e);
         }
         
-        this.data = Data;
+        this.closeFileReader();
     }
 
     @Override

@@ -4,7 +4,10 @@
 
 package com.mycompany.pots;
 
-import data.*;
+import DataAbstractions.ItemCollectionFactory;
+import DataAbstractions.ItemCollection;
+import DataAbstractions.PO;
+
 
 /**
  *
@@ -14,7 +17,15 @@ public class POTS {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
-        DataContainer a = new FileHandler();
+        
+        ItemCollectionFactory b = new ItemCollectionFactory();
+        ItemCollection<PO> c = b.createItemCollection("PO");
+        
+        System.out.println(c.getItem("1").getDetail());
+        
+        
+//        c.filter(Fields, Values);
+        
         
     }
 }

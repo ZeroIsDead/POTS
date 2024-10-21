@@ -4,10 +4,19 @@
  */
 package com.mycompany.pots;
 
+import DataAbstractions.User;
+import java.util.List;
+
 /**
  *
  * @author JONATHAN
  */
-public abstract class Manager {
-    public int a;
+public abstract class Manager extends User {
+    public Manager(List<String> Details) {
+        super(Details);
+    }
+    
+    public void ang() {
+        System.out.println("Hello World 2!");
+    }
 }

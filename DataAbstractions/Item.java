@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package data;
+package DataAbstractions;
 
 import java.util.List;
 
@@ -14,6 +14,5 @@ public abstract class Item {
 
     public abstract void setDetail(List<String> Details);
     public abstract List<String> getDetail();
-    public abstract void deleteContainer();
     
 }

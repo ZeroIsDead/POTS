@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
  */
-package data;
+package DataAbstractions.base;
 
 import java.util.List;
 
@@ -11,7 +11,8 @@ import java.util.List;
  * @author JONATHAN
  */
 public interface DataWriter {
-    public void setFile(String filePath);
+    public void setFilePath(String filePath);
+    public String getFilePath();
     public void writeData(List<List<String>> Data);
     public void appendData(List<String> Data);
     public void updateData(List<String> Data);
