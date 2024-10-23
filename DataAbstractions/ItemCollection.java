@@ -4,9 +4,7 @@
  */
 package DataAbstractions;
 
-import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.ItemFactory;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,28 +15,35 @@ import java.util.List;
 public class ItemCollection<E extends Item> {
     private final List<String> FieldNames;
     private final List<E> ItemList;
-    private final ItemFactory Factory;
-    private final DataContainer reader;
+    private ItemFactory Factory;
     
-    public ItemCollection(List<E> newItemList, ItemFactory newFactory, DataContainer newReader) {
+    public ItemCollection(List<E> newItemList, ItemFactory newFactory) {
         this.ItemList = newItemList;
         this.Factory = newFactory;
-        this.reader = newReader;
         this.FieldNames = this.Factory.getFieldNames();
     }
     
-    private List<List<String>> parseItemIntoWritableFormat() {
-        List<List<String>> allDetails = new ArrayList<>();
+    @Override
+    public String toString() {
+        String Output = "";
         
-        for (E currentItem : this.ItemList) {
-            allDetails.add(currentItem.getDetail());
-        }
-        return allDetails;
+        int count = 1;
+        for (E Item : this.ItemList) {
+            Output += String.format("%d \n\n %s\n\n", count++, Item);
+        } 
+        return Output;
     }
     
-    private void UpdateFile() {
-        List<List<String>> WritableItemList = this.parseItemIntoWritableFormat();
-        this.Factory.write(WritableItemList);
+    public void setFactory(ItemFactory newFactory) {
+        this.Factory = newFactory;
+    }
+    
+    public void UpdateFile() {
+        this.Factory.write((List<Item>) this.ItemList); // Cast All PO / PR / Product / etc into Item Class
+    }
+    
+    public int getCollectionSize() {
+        return this.ItemList.size();
     }
     
     public Boolean CheckItemInCollection(E ItemInstance) {
@@ -61,6 +66,32 @@ public class ItemCollection<E extends Item> {
         return false;
     }
     
+    public int getItemIndex(E ItemInstance) {
+        String ItemInstanceID = ItemInstance.getDetail().get(0);
+        
+        for (int i = 0; i < this.ItemList.size(); i++) {
+            String CurrentItemID = this.ItemList.get(i).getDetail().get(0);
+            
+            if (CurrentItemID.equals(ItemInstanceID)) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
+    public int getItemIndex(String ID) {
+        for (int i = 0; i < this.ItemList.size(); i++) {
+            String CurrentItemID = this.ItemList.get(i).getDetail().get(0);
+            
+            if (CurrentItemID.equals(ID)) {
+                return i;
+            }
+        }
+        
+        return -1;
+    }
+    
     public E createItem(List<String> Details) {
         //Check if item exist in list and If Data Size Matches
         if (Details.size() != this.FieldNames.size() || this.CheckItemInCollection(Details)) {
@@ -71,18 +102,29 @@ public class ItemCollection<E extends Item> {
         E newItem = (E) this.Factory.createItem(Details);
         
         this.ItemList.add(newItem);
-        this.UpdateFile();
         
         return newItem;
     }
     
     public void addItem(E ItemInstance) {
-        if (this.CheckItemInCollection(ItemInstance)) {
+        if (this.getItemIndex(ItemInstance) != -1) {
             return;
         }
         
         this.ItemList.add(ItemInstance);
-        this.UpdateFile();
+    }
+    
+    public void updateItem(E ItemInstance) {
+        
+        int itemIndex = this.getItemIndex(ItemInstance);
+        
+//        Check if ID is Same But The Details Are Different
+        if (itemIndex != -1 && !this.CheckItemInCollection(ItemInstance)) {
+            return;
+        }
+        
+        this.ItemList.remove(itemIndex);
+        this.ItemList.add(itemIndex, ItemInstance);
     }
     
     public void removeItem(E ItemInstance) {
@@ -90,7 +132,6 @@ public class ItemCollection<E extends Item> {
         for (E currentItem : this.ItemList) {
             if (currentItem.equals(ItemInstance)) {
                 this.ItemList.remove(count);
-                this.UpdateFile();
                 return;
             }
             count++;
@@ -105,19 +146,22 @@ public class ItemCollection<E extends Item> {
             
             if (currentItemDetails.get(0).equals(ID)) {
                 this.ItemList.remove(count);
-                this.UpdateFile();
                 return;
             }
             count++;
         }
     }
     
-    public List<String> getColumn(String Field) {
-        return this.reader.getColumn(Field);
-    }
+//    public List<String> getColumn(String Field) {
+//        return this.reader.getColumn(Field);
+//    }
     
     public List<String> getFieldNames() {
         return this.FieldNames;
+    }
+    
+    public List<E> getAll() {
+        return this.ItemList;
     }
 
     public E getItem(String ID) {
@@ -129,22 +173,62 @@ public class ItemCollection<E extends Item> {
         return null;
     }
     
-    public ItemCollection<E> filter(List<String> Fields, List<String> Values) {
-        List<List<String>> PODetailList = this.reader.FitlerData(Fields, Values);
-        List<E> FilteredItemList = new ArrayList<>();
-        
-        for (List<String> PODetail : PODetailList) {
-            E newItem = (E) this.Factory.createItem(PODetail);
-            FilteredItemList.add(newItem);
-        }
-        
-        return new ItemCollection<>(FilteredItemList, this.Factory, this.reader);
-    }        
+//    public ItemCollection<E> filter(List<String> Fields, List<String> Values) {
+//        List<List<String>> ItemDetailList = this.reader.FitlerData(Fields, Values);
+//        List<E> FilteredItemList = new ArrayList<>();
+//        
+//        for (List<String> ItemDetail : ItemDetailList) {
+//            E newItem = (E) this.Factory.createItem(ItemDetail);
+//            FilteredItemList.add(newItem);
+//        }
+//        
+//        return new ItemCollection<>(FilteredItemList, this.Factory, this.reader);
+//    }   
+//    
+//    public ItemCollection<E> filter(String Fields, List<String> Values) {
+//        List<List<String>> ItemDetailList = this.reader.FitlerData(Fields, Values);
+//        List<E> FilteredItemList = new ArrayList<>();
+//        
+//        for (List<String> ItemDetail : ItemDetailList) {
+//            E newItem = (E) this.Factory.createItem(ItemDetail);
+//            FilteredItemList.add(newItem);
+//        }
+//        
+//        return new ItemCollection<>(FilteredItemList, this.Factory, this.reader);
+//    }
+//    
+//    
+//    public ItemCollection<E> filter(String Fields, String Values) {
+//        List<List<String>> ItemDetailList = this.reader.FitlerData(Fields, Values);
+//        List<E> FilteredItemList = new ArrayList<>();
+//        
+//        for (List<String> ItemDetail : ItemDetailList) {
+//            E newItem = (E) this.Factory.createItem(ItemDetail);
+//            FilteredItemList.add(newItem);
+//        }
+//        
+//        return new ItemCollection<>(FilteredItemList, this.Factory, this.reader);
+//    }
     
     public void extend(ItemCollection<E> otherItemCollection) {
         List<E> otherItemList = otherItemCollection.ItemList;
         for (E otherItem : otherItemList) {
-            this.ItemList.add(otherItem);
+            if (!this.CheckItemInCollection(otherItem)) {
+                this.ItemList.add(otherItem);
+            }
         }
     }
+    
+    public void extend(List<E> otherItemList) {
+        for (E otherItem : otherItemList) {
+            if (!this.CheckItemInCollection(otherItem)) {
+                this.ItemList.add(otherItem);
+            }
+        }
+    }
+    
+    public Boolean isEmpty() {
+        return this.ItemList.isEmpty();
+    }
+    
 }

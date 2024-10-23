@@ -9,9 +9,11 @@ import DataAbstractions.Product;
 import DataAbstractions.Payment;
 import DataAbstractions.PO;
 import DataAbstractions.Item;
-import DataAbstractions.Purchase;
+import DataAbstractions.ItemCollectionFactory;
 import DataAbstractions.PR;
 import DataAbstractions.Supplier;
+import DataAbstractions.User;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +37,17 @@ public class ItemFactory {
         return this.FieldNames;
     }
     
-    public void write(List<List<String>> Data) {
+    private List<List<String>> parseItemIntoWritableFormat(List<Item> ItemList) {
+        List<List<String>> allDetails = new ArrayList<>();
+        
+        for (Item currentItem : ItemList) {
+            allDetails.add(currentItem.getDetail());
+        }
+        return allDetails;
+    }
+    
+    public void write(List<Item> ItemList) {
+        List<List<String>> Data = this.parseItemIntoWritableFormat(ItemList);
         this.writer.writeData(Data);
     }
     
@@ -50,17 +62,17 @@ public class ItemFactory {
             case "Payment" -> {
                 return new Payment(this.FieldNames, Details);
             }
-            case "Product" -> {
-                return new Product(this.FieldNames, Details);
-            }
-            case "Purchase" -> {
-                return new Purchase(this.FieldNames, Details);
-            }
             case "Sales" -> {
                 return new Sales(this.FieldNames, Details);
             }
+            case "Product" -> {
+                return new Product(this.FieldNames, Details);
+            }
             case "Supplier" -> {
                 return new Supplier(this.FieldNames, Details);
+            }
+            case "User" -> {
+                return new User(this.FieldNames, Details);
             }
             default -> {
                 return null;

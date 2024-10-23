@@ -11,5 +11,9 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public abstract class Manager {
+public abstract class Manager extends User {
+
+    public Manager(List<String> FieldNames, List<String> Details) {
+        super(FieldNames, Details);
+    }
 }

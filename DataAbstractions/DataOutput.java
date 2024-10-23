@@ -4,18 +4,11 @@
  */
 package DataAbstractions;
 
-import java.util.List;
-
 /**
  *
  * @author JONATHAN
  */
-public class User extends Item {
+public class DataOutput {
+//    All Ouput By User is Placed and stored Here (Like a buffer) and then accessed by case handlers or display drivers 
     
-    
-    public User (List<String> FieldNames, List<String> Details) {
-        super(FieldNames, Details);
-    }
-    
-//    Add get and sets
 }

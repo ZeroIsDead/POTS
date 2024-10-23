@@ -19,14 +19,23 @@ public abstract class Item {
         this.Details = Details;
     }
     
-    public String ToString() {
+    @Override
+    public String toString() {
         String Buffer = "";
         
-        for (int i = 0; i < this.Fields.size(); i++) {
+        for (int i = 0; i < this.Fields.size() && i < this.Details.size(); i++) {
             Buffer += String.format("%s: %s\n", this.Fields.get(i), this.Details.get(i));
         }
         
         return Buffer;
+    }
+    
+    public String getID() {
+        if (this.Details.isEmpty()) {
+            return "";
+        }
+        
+        return this.Details.get(0);
     }
 
     public void setDetail(List<String> Details) {

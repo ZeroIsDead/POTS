@@ -1,0 +1,6 @@
+Username;FirstName;LastName;Password;Role;
+bob;bob;bob;bob;admin
+peter;peter;peter;peter;PM
+sam;sam;sam;sam;SM
+ivan;ivan;ivan;ivan;IM
+ferb;ferb;ferb;ferb;FM

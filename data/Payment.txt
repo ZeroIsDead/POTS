@@ -1,0 +1,2 @@
+ID;BankReferenceID;SupplierID;Date;Status
+1;1;1;1;1

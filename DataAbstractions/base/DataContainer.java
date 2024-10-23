@@ -19,4 +19,6 @@ public interface DataContainer {
     public List<String> getColumn(String Field);
     public List<String> getFieldName();
     public List<List<String>> FitlerData(List<String> Field, List<String> Value);
+    public List<List<String>> FitlerData(String Field, List<String> Value);
+    public List<List<String>> FitlerData(String Field, String Value);
 }
