@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class InventoryManager extends Manager {
     
-    public InventoryManager(List<String> FieldNames, List<String> Details) {
-        super(FieldNames, Details);
-    }
-    
+//    public InventoryManager(List<String> FieldNames, List<String> Details) {
+//        super(FieldNames, Details);
+//    }
+//    
 }

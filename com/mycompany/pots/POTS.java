@@ -4,12 +4,14 @@
 
 package com.mycompany.pots;
 
+import DataAbstractions.Item;
 import DataAbstractions.ItemCollectionFactory;
 import DataAbstractions.ItemCollection;
-import DataAbstractions.PO;
-import DataAbstractions.PR;
-import DataAbstractions.Product;
+import DataAbstractions.base.PO;
+import DataAbstractions.base.PR;
+import DataAbstractions.base.Product;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -23,9 +25,13 @@ public class POTS {
         System.out.println("Hello World!");
         
         ItemCollectionFactory b = new ItemCollectionFactory();
-        ItemCollection<PO> POCollection = b.createItemCollection("PO");
+        ItemCollection POCollection = b.createItemCollection("PO");
         
-//        List<String> Details = new ArrayList<>();
+        
+//        String[] DetailsArray = {"3", "5", "1", "10/10/24"};
+//        List<String> Details = Arrays.asList(DetailsArray);
+//        
+//        System.out.println(Details);
         
 //        Details.add("3");
 //        Details.add("5");
@@ -35,36 +41,32 @@ public class POTS {
 //        POCollection.createItem(Details);
 
         
-        for (PO newPO : POCollection.getAll()) {
+        for (Item newPO : POCollection.getAll()) {
             System.out.println("PO Details \n\n");
 
             System.out.println(newPO);
-
-            ItemCollection<PR> PRCollection = newPO.getRelatedPRs();
-
-            List<PR> PRList = PRCollection.getAll();
             
-            if (PRCollection.isEmpty()) {
+            List<Item> PRCollection = newPO.getDownwardsRelatedItems("PR");
+
+            if (PRCollection == null) {
                 continue;
             }
 
             System.out.println("PR Details \n\n");
             
-            for (PR newPR : PRList) {
+            for (Item newPR : PRCollection) {
                 System.out.println(newPR);
+                
+                List<Item> ProductCollection = newPR.getDownwardsRelatedItems("Product");
 
-                ItemCollection<Product> ProductCollection = newPR.getRelatedProducts();
-
-                if (ProductCollection.isEmpty()) {
+                if (ProductCollection == null) {
                     continue;
                 }
-
-                List<Product> ProductList = ProductCollection.getAll();
 
                 System.out.println("Product Details \n\n");
 
 
-                for (Product a : ProductList) {
+                for (Item a : ProductCollection) {
                     System.out.println(a);
                 }
 

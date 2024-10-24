@@ -4,16 +4,7 @@
  */
 package DataAbstractions.base;
 
-import DataAbstractions.Sales;
-import DataAbstractions.Product;
-import DataAbstractions.Payment;
-import DataAbstractions.PO;
 import DataAbstractions.Item;
-import DataAbstractions.ItemCollectionFactory;
-import DataAbstractions.PR;
-import DataAbstractions.Supplier;
-import DataAbstractions.User;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,58 +12,28 @@ import java.util.List;
  * @author JONATHAN
  */
 public class ItemFactory {
-    private final DataWriter writer;
-    private final DataContainer reader;
-    private final String Type;
-    private final List<String> FieldNames;
-    
-    public ItemFactory(String Type, DataContainer newReader, DataWriter newWriter) {
-        this.Type = Type;
-        this.writer = newWriter;
-        this.reader = newReader;
-        this.FieldNames = this.reader.getFieldName();
-    }
-    
-    public List<String> getFieldNames(){
-        return this.FieldNames;
-    }
-    
-    private List<List<String>> parseItemIntoWritableFormat(List<Item> ItemList) {
-        List<List<String>> allDetails = new ArrayList<>();
-        
-        for (Item currentItem : ItemList) {
-            allDetails.add(currentItem.getDetail());
-        }
-        return allDetails;
-    }
-    
-    public void write(List<Item> ItemList) {
-        List<List<String>> Data = this.parseItemIntoWritableFormat(ItemList);
-        this.writer.writeData(Data);
-    }
-    
-    public Item createItem(List<String> Details) {
-        switch (this.Type) {
+    public Item createItem(List<String> ItemFields, List<String> RowData, String Type) {
+        switch (Type) {
             case "PO" -> {
-                return new PO(this.FieldNames, Details);
+                return new PO(ItemFields, RowData, Type);
             }
             case "PR" -> {
-                return new PR(this.FieldNames, Details);
-            }
-            case "Payment" -> {
-                return new Payment(this.FieldNames, Details);
-            }
-            case "Sales" -> {
-                return new Sales(this.FieldNames, Details);
+                return new PR(ItemFields, RowData, Type);
             }
             case "Product" -> {
-                return new Product(this.FieldNames, Details);
+                return new Product(ItemFields, RowData, Type);
+            }
+            case "Payment" -> {
+                return new Payment(ItemFields, RowData, Type);
+            }
+            case "Sales" -> {
+                return new Sales(ItemFields, RowData, Type);
             }
             case "Supplier" -> {
-                return new Supplier(this.FieldNames, Details);
+                return new Supplier(ItemFields, RowData, Type);
             }
             case "User" -> {
-                return new User(this.FieldNames, Details);
+                return new User(ItemFields, RowData, Type);
             }
             default -> {
                 return null;

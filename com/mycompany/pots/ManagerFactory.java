@@ -4,21 +4,21 @@
  */
 package com.mycompany.pots;
 
-import DataAbstractions.User;
+import DataAbstractions.base.User;
 
 /**
  *
  * @author JONATHAN
  */
 public class ManagerFactory {
-    public Manager createManager(User UserAccount) {
-        switch (UserAccount.getDetail().get(0)) { // Check Role
-            case "IM" -> {
-                return new InventoryManager(UserAccount.getFields(), UserAccount.getDetail());
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
+//    public Manager createManager(User UserAccount) {
+//        switch (UserAccount.getDetail().get(0)) { // Check Role
+//            case "IM" -> {
+//                return new InventoryManager(UserAccount.getFields(), UserAccount.getDetail());
+//            }
+//            default -> {
+//                return null;
+//            }
+//        }
+//    }
 }

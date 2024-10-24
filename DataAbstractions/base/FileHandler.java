@@ -34,6 +34,13 @@ public class FileHandler implements DataWriter, DataContainer {
         this.setFilePath(filePath);
     }
     
+    private String parseFilePath(String Type) {
+        String currentWorkingDirectory = System.getProperty("user.dir");
+        
+        return currentWorkingDirectory + "\\src\\main\\java\\data\\" + Type + ".txt";
+    }
+    
+    
     private String parseData(List<String> rowData) { 
         String parsedRowData = "";
 
@@ -79,13 +86,14 @@ public class FileHandler implements DataWriter, DataContainer {
     }
 
     @Override
-    public final void setFilePath(String filePath) {
+    public final void setFilePath(String FileName) {
         try {
-            File file = new File(filePath);
+            String FilePath = this.parseFilePath(FileName);
+            File file = new File(FilePath);
             if (!file.exists()) {
                 file.createNewFile();
             }
-            this.filePath = filePath;
+            this.filePath = FilePath;
         } catch (IOException e) {
             System.out.println("File Not Found!");
             return;

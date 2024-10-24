@@ -4,6 +4,10 @@
  */
 package DataAbstractions;
 
+//import DataAbstractions.base.DataContainer;
+//import DataAbstractions.base.DataWriter;
+//import DataAbstractions.base.FileHandler;
+//import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +17,12 @@ import java.util.List;
 public abstract class Item {
     protected List<String> Fields;
     protected List<String> Details;
+    protected String Type;
     
-    public Item (List<String> FieldNames, List<String> Details) {
+    public Item (List<String> FieldNames, List<String> Details, String Type) {
         this.Fields = FieldNames;
         this.Details = Details;
+        this.Type = Type;
     }
     
     @Override
@@ -38,20 +44,26 @@ public abstract class Item {
         return this.Details.get(0);
     }
 
-    public void setDetail(List<String> Details) {
-        this.Details = Details;
-    }
-
-    public List<String> getDetail() {
-        return this.Details;
-    }
-    
-    public void setFields(List<String> FieldNames) {
-        this.Fields = FieldNames;
-    } 
-    
     public List<String> getFields() {
         return this.Fields;
     }
+    
+    public List<String> getDetails() {
+        return this.Details;
+    }
+
+    public void setDetails(List<String> newDetails) {
+        this.Details = newDetails;
+    }
+    
+    public abstract List<Item> getUpwardsRelatedItems(String Type); // Get which PO the PR is in
+    
+    public abstract List<Item> getDownwardsRelatedItems(String Type); // Get List of PR of a PO
+
+    public abstract void addRelatedItem(Item newItem);
+
+    public abstract void updateRelatedItem(Item newItem);
+    
+    public abstract void deleteRelatedItem(Item newItem);
     
 }

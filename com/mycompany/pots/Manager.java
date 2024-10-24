@@ -4,16 +4,16 @@
  */
 package com.mycompany.pots;
 
-import DataAbstractions.User;
+import DataAbstractions.base.User;
 import java.util.List;
 
 /**
  *
  * @author JONATHAN
  */
-public abstract class Manager extends User {
+public abstract class Manager {
 
-    public Manager(List<String> FieldNames, List<String> Details) {
-        super(FieldNames, Details);
-    }
+//    public Manager(List<String> FieldNames, List<String> Details) {
+//        super(FieldNames, Details);
+//    }
 }
