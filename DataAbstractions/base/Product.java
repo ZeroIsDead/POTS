@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Product extends Item {
 
-    public Product(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public Product(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -62,19 +62,10 @@ public class Product extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void addRelatedItem(Item newItem) {}
 
     @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void deleteRelatedItem(Item newItem) {}
     
     private List<Item> getItemRelatedToProduct(String Type) {
         String ID = this.getID();
@@ -82,10 +73,10 @@ public class Product extends Item {
 //        Reading and Writing To The Relationship File
         String FileName = "ProductTo" + Type; // ProductToPR / ProductToSales
 
-        DataContainer CollectionReader = new FileHandler(FileName);
+        this.reader.setFilePath(FileName);
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> Relationship = CollectionReader.FitlerData("ProductID", ID);
+        List<List<String>> Relationship = this.reader.FitlerData("ProductID", ID);
         
         if (Relationship.isEmpty()) {
             return null;
@@ -98,11 +89,11 @@ public class Product extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        DataContainer reader = new FileHandler(Type);
+        this.reader.setFilePath(Type);
         
         String IDType = Type + "ID"; // PRID / SalesID
 
-        List<List<String>> ItemDetailList = reader.FitlerData(IDType, RelatedItemIDList);
+        List<List<String>> ItemDetailList = this.reader.FitlerData(IDType, RelatedItemIDList);
 
         List<Item> ItemList = new ArrayList<>();
 
@@ -111,7 +102,7 @@ public class Product extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(reader.getFieldName(), RowData, Type);
+            Item newItem = Factory.createItem(RowData, Type, this.reader, this.writer);
             ItemList.add(newItem);
         }
 

@@ -8,6 +8,8 @@ package DataAbstractions;
 //import DataAbstractions.base.DataWriter;
 //import DataAbstractions.base.FileHandler;
 //import java.util.ArrayList;
+import DataAbstractions.base.DataContainer;
+import DataAbstractions.base.DataWriter;
 import java.util.List;
 
 /**
@@ -18,11 +20,15 @@ public abstract class Item {
     protected List<String> Fields;
     protected List<String> Details;
     protected String Type;
+    protected DataWriter writer;
+    protected DataContainer reader;
     
-    public Item (List<String> FieldNames, List<String> Details, String Type) {
-        this.Fields = FieldNames;
-        this.Details = Details;
+    public Item (List<String> Details, String Type, DataContainer reader, DataWriter writer) {
         this.Type = Type;
+        this.reader = reader;
+        this.writer = writer;
+        this.Fields = this.reader.getFieldName();
+        this.Details = Details;
     }
     
     @Override
@@ -43,6 +49,10 @@ public abstract class Item {
         
         return this.Details.get(0);
     }
+    
+    public String getType() {
+        return this.Type;
+    }
 
     public List<String> getFields() {
         return this.Fields;
@@ -62,8 +72,6 @@ public abstract class Item {
 
     public abstract void addRelatedItem(Item newItem);
 
-    public abstract void updateRelatedItem(Item newItem);
-    
     public abstract void deleteRelatedItem(Item newItem);
     
 }

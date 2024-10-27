@@ -1,4 +1,4 @@
-Username;FirstName;LastName;Password;Role;
+UserID;FirstName;LastName;Password;Role;
 bob;bob;bob;bob;admin
 peter;peter;peter;peter;PM
 sam;sam;sam;sam;SM

@@ -21,14 +21,13 @@ public class ItemCollectionFactory {
         DataWriter writer = new FileHandler(Type);
         
         List<List<String>> ItemDetailList = reader.getData();
-        List<String> ItemFields = reader.getFieldName();
         
         List<Item> ItemList = new ArrayList<>();
         
         ItemFactory Factory = new ItemFactory();
         
         for (List<String> RowData : ItemDetailList) {
-            Item newItem = Factory.createItem(ItemFields, RowData, Type);
+            Item newItem = Factory.createItem(RowData, Type, reader, writer);
 
             ItemList.add(newItem);
         }

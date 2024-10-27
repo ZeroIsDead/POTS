@@ -4,16 +4,8 @@
 
 package com.mycompany.pots;
 
-import DataAbstractions.Item;
-import DataAbstractions.ItemCollectionFactory;
-import DataAbstractions.ItemCollection;
-import DataAbstractions.base.PO;
-import DataAbstractions.base.PR;
-import DataAbstractions.base.Product;
-import java.util.ArrayList;
-import java.util.Arrays;
+import DataAbstractions.*;
 import java.util.List;
-
 
 /**
  *
@@ -26,7 +18,6 @@ public class POTS {
         
         ItemCollectionFactory b = new ItemCollectionFactory();
         ItemCollection POCollection = b.createItemCollection("PO");
-        
         
 //        String[] DetailsArray = {"3", "5", "1", "10/10/24"};
 //        List<String> Details = Arrays.asList(DetailsArray);
@@ -43,7 +34,7 @@ public class POTS {
         
         for (Item newPO : POCollection.getAll()) {
             System.out.println("PO Details \n\n");
-
+            
             System.out.println(newPO);
             
             List<Item> PRCollection = newPO.getDownwardsRelatedItems("PR");

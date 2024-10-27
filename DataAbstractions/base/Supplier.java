@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Supplier extends Item {
 
-    public Supplier(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public Supplier(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -36,28 +36,19 @@ public class Supplier extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void addRelatedItem(Item newItem) {}
 
     @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void deleteRelatedItem(Item newItem) {}
     
     private List<Item> getProductRelatedToSupplier() {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler("Product");
+        this.reader.setFilePath("Product");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> ItemDetailList = CollectionReader.FitlerData("SupplierID", ID);
+        List<List<String>> ItemDetailList = this.reader.FitlerData("SupplierID", ID);
         
         if (ItemDetailList.isEmpty()) {
             return null;
@@ -70,7 +61,7 @@ public class Supplier extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(CollectionReader.getFieldName(), RowData, "Product");
+            Item newItem = Factory.createItem(RowData, "Product", this.reader, this.writer);
             ItemList.add(newItem);
         }
 

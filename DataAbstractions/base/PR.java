@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class PR extends Item {
 
-    public PR(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public PR(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -58,27 +58,47 @@ public class PR extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+        if (!newItem.getType().equals("Product")) {
+            return;
+        }
+        
+        this.writer.setFilePath("ProductToPR");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
 
-    @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+        this.writer.appendData(FileDataFormat);
     }
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (!newItem.getType().equals("Product")) {
+            return;
+        }
+        
+        this.writer.setFilePath("ProductToPR");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        
+        this.writer.deleteCompositeData(FileDataFormat);
     }
     
     private List<Item> getPORelatedToPR() {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler("PRToPO");
+        this.reader.setFilePath("PRToPO");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> Relationship = CollectionReader.FitlerData("PRID", ID);
+        List<List<String>> Relationship = this.reader.FitlerData("PRID", ID);
         
         if (Relationship.isEmpty()) {
             return null;
@@ -91,9 +111,9 @@ public class PR extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        DataContainer reader = new FileHandler("PO");
+        this.reader.setFilePath("PO");
 
-        List<List<String>> ItemDetailList = reader.FitlerData("POID", RelatedItemIDList);
+        List<List<String>> ItemDetailList = this.reader.FitlerData("POID", RelatedItemIDList);
 
         List<Item> ItemList = new ArrayList<>();
 
@@ -102,7 +122,7 @@ public class PR extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(reader.getFieldName(), RowData, "PO");
+            Item newItem = Factory.createItem(RowData, "PO", this.reader, this.writer);
             ItemList.add(newItem);
         }
 
@@ -113,32 +133,29 @@ public class PR extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler("ProductToPR");
+        this.reader.setFilePath("ProductToPR");
         
-//        Get Wanted Field to Help Filter Out All Relationships For - Product To PR / Product List
-        String RelationshipWantedFields = CollectionReader.getFieldName().get(0);
-
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> Relationship = CollectionReader.FitlerData(RelationshipWantedFields, ID);
+        List<List<String>> Relationship = this.reader.FitlerData("PRID", ID);
         
         if (Relationship.isEmpty()) {
             return null;
         }
         
-        String ItemWantedField = CollectionReader.getFieldName().get(1); // POID / PRID / ProductID
         List<String> RelatedItemIDList = new ArrayList<>();
         
         for (List<String> r : Relationship) {
             RelatedItemIDList.add(r.get(1)); // get ID of All Related Items 
         }
-//        Get The Quantity Of Product Sold/Bought With Its Index
-        List<String> ItemQuantities = CollectionReader.getColumn("Quantity");
-        int WantedFieldIndex = CollectionReader.getFieldName().indexOf("Quantity");
+//        Get The Quantity Of Product Sold/Bought
+        List<String> ItemQuantities = this.reader.getColumn("Quantity");
 
 //        Read Product File And Get All Related Products To PR/Sales
-        DataContainer reader = new FileHandler("Product");
+        this.reader.setFilePath("Product");
+        
+        int WantedFieldIndex = this.reader.getFieldName().indexOf("Quantity");
 
-        List<List<String>> ItemDetailList = reader.FitlerData(ItemWantedField, RelatedItemIDList);
+        List<List<String>> ItemDetailList = this.reader.FitlerData("ProductID", RelatedItemIDList);
 
         List<Item> ItemList = new ArrayList<>();
 
@@ -151,7 +168,7 @@ public class PR extends Item {
             
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(reader.getFieldName(), RowData, "Product");
+            Item newItem = Factory.createItem(RowData, "Product", this.reader, this.writer);
             ItemList.add(newItem);
         }
 

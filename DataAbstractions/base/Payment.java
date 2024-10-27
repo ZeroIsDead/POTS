@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Payment extends Item {
 
-    public Payment(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public Payment(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -29,6 +29,33 @@ public class Payment extends Item {
             case "PO" -> {
                 return this.getPORelatedToPayment();
             }
+            case "PR" -> {
+                List<Item> POList = this.getDownwardsRelatedItems("PO");
+                
+                List<Item> PRList = new ArrayList<>();
+                
+                for (Item currentPO : POList) {
+                    List<Item> PRRelatedToPO = currentPO.getDownwardsRelatedItems("PR");
+                    
+                    PRList.addAll(PRRelatedToPO);
+                }
+                
+                return PRList;
+            }
+            case "Product" -> {
+                List<Item> PRList = this.getDownwardsRelatedItems("PR");
+                
+                List<Item> ProductList = new ArrayList<>();
+                
+                for (Item currentPR : PRList) {
+                    List<Item> ProductRelatedToPR = currentPR.getDownwardsRelatedItems("Product");
+                    
+                    ProductList.addAll(ProductRelatedToPR);
+                }
+                
+                return ProductList;
+            }
+            
             default -> {
                 return null;
             }
@@ -37,36 +64,49 @@ public class Payment extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (!newItem.getType().equals("PO")) {
+            return;
+        }
+        
+        this.writer.setFilePath("POToPayment");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        
+        this.writer.appendData(FileDataFormat);
     }
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (!newItem.getType().equals("PO")) {
+            return;
+        }
+        
+        this.writer.setFilePath("POToPayment");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        
+        this.writer.deleteCompositeData(FileDataFormat);
     }
     
     private List<Item> getPORelatedToPayment() {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler("POToPayment");
+        this.reader.setFilePath("POToPayment");
         
-//        Get Wanted Field to Help Filter Out All Relationships For - Product To PR / Product List
-        String RelationshipWantedFields = CollectionReader.getFieldName().get(0);
-
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> Relationship = CollectionReader.FitlerData(RelationshipWantedFields, ID);
+        List<List<String>> Relationship = this.reader.FitlerData("PaymentID", ID);
         
         if (Relationship.isEmpty()) {
             return null;
         }
         
-        String ItemWantedField = CollectionReader.getFieldName().get(1); // POID / PRID / ProductID
         List<String> RelatedItemIDList = new ArrayList<>();
         
         for (List<String> r : Relationship) {
@@ -74,9 +114,9 @@ public class Payment extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        DataContainer reader = new FileHandler("PO");
+        this.reader.setFilePath("PO");
 
-        List<List<String>> ItemDetailList = reader.FitlerData(ItemWantedField, RelatedItemIDList);
+        List<List<String>> ItemDetailList = reader.FitlerData("POID", RelatedItemIDList);
 
         List<Item> ItemList = new ArrayList<>();
 
@@ -85,7 +125,7 @@ public class Payment extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(reader.getFieldName(), RowData, "PO");
+            Item newItem = Factory.createItem(RowData, "PO", this.reader, this.writer);
             ItemList.add(newItem);
         }
 

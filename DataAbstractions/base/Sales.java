@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class Sales extends Item {
 
-    public Sales(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public Sales(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -37,27 +37,46 @@ public class Sales extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (!newItem.getType().equals("Product")) {
+            return;
+        }
+        
+        this.writer.setFilePath("ProductToSales");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        
+        this.writer.appendData(FileDataFormat);
     }
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (!newItem.getType().equals("Product")) {
+            return;
+        }
+        
+        this.writer.setFilePath("ProductToSales");
+        
+        List<String> FileDataFormat = new ArrayList<>();
+        
+        FileDataFormat.add(this.getID());
+        FileDataFormat.add(newItem.getID());
+        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        
+        this.writer.deleteCompositeData(FileDataFormat);
     }
     
     private List<Item> getProductsRelatedToSale() {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler("ProductToSales");
+        this.reader.setFilePath("ProductToSales");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> Relationship = CollectionReader.FitlerData("SalesID", ID);
+        List<List<String>> Relationship = this.reader.FitlerData("SalesID", ID);
         
         if (Relationship.isEmpty()) {
             return null;
@@ -68,14 +87,15 @@ public class Sales extends Item {
         for (List<String> r : Relationship) {
             RelatedItemIDList.add(r.get(1)); // get ID of All Related Items 
         }
-//        Get The Quantity Of Product Sold/Bought With Its Index
-        List<String> ItemQuantities = CollectionReader.getColumn("Quantity");
-        int WantedFieldIndex = CollectionReader.getFieldName().indexOf("Quantity");
+//        Get The Quantity Of Product Sold/Bought
+        List<String> ItemQuantities = this.reader.getColumn("Quantity");
 
 //        Read Product File And Get All Related Products To PR/Sales
-        DataContainer reader = new FileHandler("Product");
+        this.reader.setFilePath("Product");
+        
+        int WantedFieldIndex = this.reader.getFieldName().indexOf("Quantity");
 
-        List<List<String>> ItemDetailList = reader.FitlerData("ProductID", RelatedItemIDList);
+        List<List<String>> ItemDetailList = this.reader.FitlerData("ProductID", RelatedItemIDList);
 
         List<Item> ItemList = new ArrayList<>();
 
@@ -88,7 +108,7 @@ public class Sales extends Item {
             
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(reader.getFieldName(), RowData, "Product");
+            Item newItem = Factory.createItem(RowData, "Product", this.reader, this.writer);
             ItemList.add(newItem);
         }
 

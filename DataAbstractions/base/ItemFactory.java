@@ -12,28 +12,28 @@ import java.util.List;
  * @author JONATHAN
  */
 public class ItemFactory {
-    public Item createItem(List<String> ItemFields, List<String> RowData, String Type) {
+    public Item createItem(List<String> RowData, String Type, DataContainer reader, DataWriter writer) {
         switch (Type) {
             case "PO" -> {
-                return new PO(ItemFields, RowData, Type);
+                return new PO(RowData, Type, reader, writer);
             }
             case "PR" -> {
-                return new PR(ItemFields, RowData, Type);
+                return new PR(RowData, Type, reader, writer);
             }
             case "Product" -> {
-                return new Product(ItemFields, RowData, Type);
+                return new Product(RowData, Type, reader, writer);
             }
             case "Payment" -> {
-                return new Payment(ItemFields, RowData, Type);
+                return new Payment(RowData, Type, reader, writer);
             }
             case "Sales" -> {
-                return new Sales(ItemFields, RowData, Type);
+                return new Sales(RowData, Type, reader, writer);
             }
             case "Supplier" -> {
-                return new Supplier(ItemFields, RowData, Type);
+                return new Supplier(RowData, Type, reader, writer);
             }
             case "User" -> {
-                return new User(ItemFields, RowData, Type);
+                return new User(RowData, Type, reader, writer);
             }
             default -> {
                 return null;

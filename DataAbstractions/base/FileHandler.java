@@ -27,17 +27,19 @@ public class FileHandler implements DataWriter, DataContainer {
     
     public FileHandler() {
         this.data = new ArrayList<>();
+        this.fields = new ArrayList<>();
     }
     
     public FileHandler(String filePath) {
         this.data = new ArrayList<>();
+        this.fields = new ArrayList<>();
         this.setFilePath(filePath);
     }
     
     private String parseFilePath(String Type) {
         String currentWorkingDirectory = System.getProperty("user.dir");
         
-        return currentWorkingDirectory + "\\src\\main\\java\\data\\" + Type + ".txt";
+        return currentWorkingDirectory + "\\src\\main\\java\\DataAbstractions\\base\\data\\" + Type + ".txt";
     }
     
     
@@ -84,6 +86,12 @@ public class FileHandler implements DataWriter, DataContainer {
             System.out.println(e);
         }
     }
+    
+    private List<List<String>> sortData(List<List<String>> Data) {
+        List<List<String>> sortedData = new ArrayList<>(Data);
+        sortedData.sort( (a, b) -> { return a.getFirst().compareTo(b.getFirst()); } ); // Sorts ID Alphabetically
+        return sortedData;
+    }
 
     @Override
     public final void setFilePath(String FileName) {
@@ -109,6 +117,8 @@ public class FileHandler implements DataWriter, DataContainer {
 
     @Override
     public void writeData(List<List<String>> Data) {
+        Data = this.sortData(Data);
+        
         try {
             this.openFileWriter();
             
@@ -129,16 +139,12 @@ public class FileHandler implements DataWriter, DataContainer {
 
     @Override
     public void appendData(List<String> Data) {
-        try {
-            this.openFileWriter();
-            
-            String parsedRowData = this.parseData(Data) + "\n";
-            this.writer.append(parsedRowData); //Wrong
-            
-            this.closeFileWriter();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        this.openFileWriter();
+
+        this.data.add(Data);
+        this.writeData(this.data);
+
+        this.closeFileWriter();
     }
 
     @Override

@@ -48,6 +48,8 @@ public class ItemCollection {
     public void UpdateFile() {
         List<List<String>> Data = new ArrayList<>(); // Turn Item Into Writable Format
         
+        this.writer.setFilePath(this.Type);
+        
         this.writer.writeData(Data);
     }
     
@@ -107,7 +109,7 @@ public class ItemCollection {
             return null;
         }
         
-        Item newItem = this.Factory.createItem(this.FieldNames, Details, this.Type);
+        Item newItem = this.Factory.createItem(Details, this.Type, this.reader, this.writer);
         
         this.ItemList.add(newItem);
         

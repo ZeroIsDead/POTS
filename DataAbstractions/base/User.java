@@ -14,8 +14,8 @@ import java.util.List;
  */
 public class User extends Item {
 
-    public User(List<String> FieldNames, List<String> Details, String Type) {
-        super(FieldNames, Details, Type);
+    public User(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+        super(Details, Type, reader, writer);
     }
 
     @Override
@@ -36,28 +36,19 @@ public class User extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void addRelatedItem(Item newItem) {}
 
     @Override
-    public void updateRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void deleteRelatedItem(Item newItem) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public void deleteRelatedItem(Item newItem) {}
     
     private List<Item> getItemRelatedToUser(String Type) {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        DataContainer CollectionReader = new FileHandler(Type);
+        this.reader.setFilePath(Type);
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
-        List<List<String>> ItemDetailList = CollectionReader.FitlerData("UserID", ID);
+        List<List<String>> ItemDetailList = this.reader.FitlerData("UserID", ID);
         
         if (ItemDetailList.isEmpty()) {
             return null;
@@ -70,7 +61,7 @@ public class User extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(CollectionReader.getFieldName(), RowData, Type);
+            Item newItem = Factory.createItem(RowData, Type, this.reader, this.writer);
             ItemList.add(newItem);
         }
 
