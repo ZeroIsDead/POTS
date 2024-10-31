@@ -6,6 +6,7 @@ package DataAbstractions.base;
 
 import DataAbstractions.Item;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -62,7 +63,12 @@ public class PR extends Item {
             return;
         }
         
-        this.writer.setFilePath("ProductToPR");
+//        A PR can only contain Products of the same Supplier
+        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return;
+        }
+        
+        this.writer.setFileName("ProductToPR");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -80,7 +86,7 @@ public class PR extends Item {
             return;
         }
         
-        this.writer.setFilePath("ProductToPR");
+        this.writer.setFileName("ProductToPR");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -95,7 +101,7 @@ public class PR extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("PRToPO");
+        this.reader.setFileName("PRToPO");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("PRID", ID);
@@ -111,7 +117,7 @@ public class PR extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("PO");
+        this.reader.setFileName("PO");
 
         List<List<String>> ItemDetailList = this.reader.FitlerData("POID", RelatedItemIDList);
 
@@ -133,7 +139,7 @@ public class PR extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("ProductToPR");
+        this.reader.setFileName("ProductToPR");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("PRID", ID);
@@ -151,7 +157,7 @@ public class PR extends Item {
         List<String> ItemQuantities = this.reader.getColumn("Quantity");
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("Product");
+        this.reader.setFileName("Product");
         
         int WantedFieldIndex = this.reader.getFieldName().indexOf("Quantity");
 
@@ -174,5 +180,20 @@ public class PR extends Item {
 
         return ItemList;
     }
-    
+
+    @Override
+    public Boolean CanBeDeleted() {
+        List<String> UpwardsRelations = Arrays.asList("PO");
+        
+        for (String Relations : UpwardsRelations) {
+            List<Item> RelatedItems = this.getUpwardsRelatedItems(Relations);
+            
+            if (!RelatedItems.isEmpty()) {
+                return false; 
+            }
+        }
+        
+        return true;
+    }
+
 }

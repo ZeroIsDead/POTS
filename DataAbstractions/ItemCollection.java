@@ -40,15 +40,19 @@ public class ItemCollection {
         
         int count = 1;
         for (Item CurrentItem : this.ItemList) {
-            Output += String.format("%d \n\n %s\n\n", count++, CurrentItem);
+            Output += String.format("%d\n%s\n", count++, CurrentItem);
         } 
         return Output;
     }
     
-    public void UpdateFile() {
+    private void UpdateFile() {
         List<List<String>> Data = new ArrayList<>(); // Turn Item Into Writable Format
         
-        this.writer.setFilePath(this.Type);
+        this.ItemList.forEach((Item currentItem) -> {
+            Data.add(currentItem.getDetails());
+        });
+        
+        this.writer.setFileName(this.Type);
         
         this.writer.writeData(Data);
     }
@@ -77,13 +81,13 @@ public class ItemCollection {
         return false;
     }
     
-    public int getItemIndex(Item ItemInstance) {
-        String ItemInstanceID = ItemInstance.getDetails().get(0);
+    private int getItemIndex(Item ItemInstance) {
+        String ItemInstanceID = ItemInstance.getDetails().get(0); // Get Item ID
         
         for (int i = 0; i < this.ItemList.size(); i++) {
-            String CurrentItemID = this.ItemList.get(i).getDetails().get(0);
+            String CurrentItemID = this.ItemList.get(i).getDetails().get(0); // get Item ID
             
-            if (CurrentItemID.equals(ItemInstanceID)) {
+            if (CurrentItemID.equals(ItemInstanceID)) { // Matches IDs
                 return i;
             }
         }
@@ -91,7 +95,7 @@ public class ItemCollection {
         return -1;
     }
     
-    public int getItemIndex(String ID) {
+    private int getItemIndex(String ID) {
         for (int i = 0; i < this.ItemList.size(); i++) {
             String CurrentItemID = this.ItemList.get(i).getDetails().get(0);
             
@@ -112,6 +116,7 @@ public class ItemCollection {
         Item newItem = this.Factory.createItem(Details, this.Type, this.reader, this.writer);
         
         this.ItemList.add(newItem);
+        this.UpdateFile();
         
         return newItem;
     }
@@ -120,14 +125,6 @@ public class ItemCollection {
         List<String> Details = Arrays.asList(DetailsArray);
         
         return this.createItem(Details);
-    }
-    
-    public void addItem(Item ItemInstance) {
-        if (this.CheckItemInCollection(ItemInstance)) {
-            return;
-        }
-        
-        this.ItemList.add(ItemInstance);
     }
     
     public void updateItem(Item ItemInstance) {
@@ -141,31 +138,52 @@ public class ItemCollection {
         
         this.ItemList.remove(itemIndex);
         this.ItemList.add(itemIndex, ItemInstance);
+        this.UpdateFile();
     }
     
-    public void removeItem(Item ItemInstance) {
+    public Boolean removeItem(Item ItemInstance) {
         int count = 0;
         for (Item currentItem : this.ItemList) {
             if (currentItem.equals(ItemInstance)) {
+                
+//                If Item Has Any Relationship or Item has Certain Status Then No Delete
+                if (!currentItem.CanBeDeleted()) { 
+                    return false;
+                }
+                
                 this.ItemList.remove(count);
-                return;
+                this.UpdateFile();
+
+                return true;
             }
             count++;
         }
+        
+        return false;
     }
     
-    public void removeItem(String ID) {
+    public Boolean removeItem(String ID) {
         
         int count = 0;
         for (Item currentItem : this.ItemList) {
             List<String> currentItemDetails = currentItem.getDetails();
             
             if (currentItemDetails.get(0).equals(ID)) {
+                
+//                If Item Has Any Relationship or Item has Certain Status Then No Delete
+                if (!currentItem.CanBeDeleted()) { 
+                    return false;
+                }
+                
                 this.ItemList.remove(count);
-                return;
+                this.UpdateFile();
+
+                return true;
             }
             count++;
         }
+        
+        return false;
     }
     
     public List<String> getColumn(String Field) {
@@ -190,15 +208,16 @@ public class ItemCollection {
     }
 
     public Item getItem(String ID) {
-        for (Item currentItem : this.ItemList) {
-            if (currentItem.getDetails().get(0).equals(ID)) {
-                return currentItem;
-            }
+        int index = this.getItemIndex(ID);
+        
+        if (index == -1) {
+            return null;
         }
-        return null;
+        
+        return this.ItemList.get(index);
     }
     
-    public List<Item> filter(List<String> Fields, List<String> Values) {
+    public List<Item> filter(List<String> Fields, List<String> Values) { // Field and Values Match 1 to 1 -> index 0 with index 0, etc
         List<Integer> indexes = new ArrayList<>();
         
 //        Creates a List of n 1s;
@@ -258,23 +277,6 @@ public class ItemCollection {
         } 
 
         return FilteredItemList;
-    }
-    
-    public void extend(ItemCollection otherItemCollection) {
-        List<Item> otherItemList = otherItemCollection.ItemList;
-        for (Item otherItem : otherItemList) {
-            if (!this.CheckItemInCollection(otherItem)) {
-                this.ItemList.add(otherItem);
-            }
-        }
-    }
-    
-    public void extend(List<Item> otherItemList) {
-        for (Item otherItem : otherItemList) {
-            if (!this.CheckItemInCollection(otherItem)) {
-                this.ItemList.add(otherItem);
-            }
-        }
     }
     
     public Boolean isEmpty() {

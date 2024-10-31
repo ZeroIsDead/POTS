@@ -19,7 +19,7 @@ import java.io.FileReader;
  * @author JONATHAN
  */
 public class FileHandler implements DataWriter, DataContainer {
-    private String filePath;
+    private String FileName;
     private FileWriter writer;
     private BufferedReader reader;
     private List<List<String>> data;
@@ -30,10 +30,10 @@ public class FileHandler implements DataWriter, DataContainer {
         this.fields = new ArrayList<>();
     }
     
-    public FileHandler(String filePath) {
+    public FileHandler(String FileName) {
         this.data = new ArrayList<>();
         this.fields = new ArrayList<>();
-        this.setFilePath(filePath);
+        this.setFileName(FileName);
     }
     
     private String parseFilePath(String Type) {
@@ -41,7 +41,6 @@ public class FileHandler implements DataWriter, DataContainer {
         
         return currentWorkingDirectory + "\\src\\main\\java\\DataAbstractions\\base\\data\\" + Type + ".txt";
     }
-    
     
     private String parseData(List<String> rowData) { 
         String parsedRowData = "";
@@ -53,9 +52,9 @@ public class FileHandler implements DataWriter, DataContainer {
         return parsedRowData;
     }
     
-    private void openFileWriter() {
+    private void openFileWriter(String FilePath) {
         try {
-            this.writer = new FileWriter(this.filePath);
+            this.writer = new FileWriter(FilePath);
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -69,9 +68,9 @@ public class FileHandler implements DataWriter, DataContainer {
         }
     }
     
-    private void openFileReader() {
+    private void openFileReader(String FilePath) {
         try {
-            FileReader fileReader = new FileReader(this.filePath);
+            FileReader fileReader = new FileReader(FilePath);
             
             this.reader = new BufferedReader(fileReader);
         } catch (IOException e) {
@@ -94,14 +93,14 @@ public class FileHandler implements DataWriter, DataContainer {
     }
 
     @Override
-    public final void setFilePath(String FileName) {
+    public final void setFileName(String FileName) {
         try {
             String FilePath = this.parseFilePath(FileName);
             File file = new File(FilePath);
             if (!file.exists()) {
-                file.createNewFile();
+                file.createNewFile(); // Set Up Cache Files
             }
-            this.filePath = FilePath;
+            this.FileName = FileName;
         } catch (IOException e) {
             System.out.println("File Not Found!");
             return;
@@ -111,8 +110,8 @@ public class FileHandler implements DataWriter, DataContainer {
     }
     
     @Override
-    public String getFilePath() {
-        return this.filePath;
+    public String getFileName() {
+        return this.FileName;
     }
 
     @Override
@@ -120,7 +119,8 @@ public class FileHandler implements DataWriter, DataContainer {
         Data = this.sortData(Data);
         
         try {
-            this.openFileWriter();
+            String FilePath = this.parseFilePath(this.FileName);
+            this.openFileWriter(FilePath);
             
             String writeBuffer = this.parseData(this.fields) + "\n";
             for (List<String> rowData : Data) {
@@ -139,12 +139,10 @@ public class FileHandler implements DataWriter, DataContainer {
 
     @Override
     public void appendData(List<String> Data) {
-        this.openFileWriter();
-
         this.data.add(Data);
+        
+//        All Changes can only be in Cache before being transfered to main if asked to save
         this.writeData(this.data);
-
-        this.closeFileWriter();
     }
 
     @Override
@@ -229,7 +227,9 @@ public class FileHandler implements DataWriter, DataContainer {
     private void getFieldAndData() {
         List<List<String>> Data = new ArrayList<>();
         
-        this.openFileReader();
+        String FilePath = this.parseFilePath(this.FileName);
+        
+        this.openFileReader(FilePath);
         
         try {
             String unparsedData;

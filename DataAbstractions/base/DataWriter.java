@@ -11,8 +11,8 @@ import java.util.List;
  * @author JONATHAN
  */
 public interface DataWriter {
-    public void setFilePath(String filePath);
-    public String getFilePath();
+    public void setFileName(String filePath);
+    public String getFileName();
     public void writeData(List<List<String>> Data);
     public void appendData(List<String> Data);
     public void updateData(List<String> Data);

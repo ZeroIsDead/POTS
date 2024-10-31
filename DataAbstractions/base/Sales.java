@@ -6,6 +6,7 @@ package DataAbstractions.base;
 
 import DataAbstractions.Item;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,8 +41,13 @@ public class Sales extends Item {
         if (!newItem.getType().equals("Product")) {
             return;
         }
+
+//        A Sale can only contain Products of the same Supplier
+        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return;
+        }
         
-        this.writer.setFilePath("ProductToSales");
+        this.writer.setFileName("ProductToSales");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -58,7 +64,7 @@ public class Sales extends Item {
             return;
         }
         
-        this.writer.setFilePath("ProductToSales");
+        this.writer.setFileName("ProductToSales");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -73,7 +79,7 @@ public class Sales extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("ProductToSales");
+        this.reader.setFileName("ProductToSales");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("SalesID", ID);
@@ -91,7 +97,7 @@ public class Sales extends Item {
         List<String> ItemQuantities = this.reader.getColumn("Quantity");
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("Product");
+        this.reader.setFileName("Product");
         
         int WantedFieldIndex = this.reader.getFieldName().indexOf("Quantity");
 
@@ -113,6 +119,11 @@ public class Sales extends Item {
         }
 
         return ItemList;
+    }
+
+    @Override
+    public Boolean CanBeDeleted() {
+        return true;
     }
 
 }

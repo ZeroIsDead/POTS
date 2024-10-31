@@ -6,6 +6,7 @@ package DataAbstractions.base;
 
 import DataAbstractions.Item;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -64,7 +65,12 @@ public class PO extends Item {
             return;
         }
         
-        this.writer.setFilePath("PRToPO");
+//        A PO can only contain PRs of the same Supplier
+        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return;
+        }
+        
+        this.writer.setFileName("PRToPO");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -80,7 +86,7 @@ public class PO extends Item {
             return;
         }
         
-        this.writer.setFilePath("PRToPO");
+        this.writer.setFileName("PRToPO");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -94,7 +100,7 @@ public class PO extends Item {
         String ID = this.getID();
         
 //        Reading The Relationship File
-        this.reader.setFilePath("POToPayment");
+        this.reader.setFileName("POToPayment");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("POID", ID);
@@ -110,7 +116,7 @@ public class PO extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("Payment");
+        this.reader.setFileName("Payment");
 
         List<List<String>> ItemDetailList = this.reader.FitlerData("PaymentID", RelatedItemIDList);
 
@@ -132,7 +138,7 @@ public class PO extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("PRToPO");
+        this.reader.setFileName("PRToPO");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("POID", ID);
@@ -148,7 +154,7 @@ public class PO extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("PR");
+        this.reader.setFileName("PR");
 
         List<List<String>> ItemDetailList = this.reader.FitlerData("PRID", RelatedItemIDList);
 
@@ -164,6 +170,32 @@ public class PO extends Item {
         }
 
         return ItemList;
+    }
+
+    @Override
+    public Boolean CanBeDeleted() {
+        List<String> DownwardsRelations = Arrays.asList("PR", "Product");
+        
+        List<String> UpwardsRelations = Arrays.asList("Payment");
+        
+        
+        for (String Relations : DownwardsRelations) {
+            List<Item> RelatedItems = this.getDownwardsRelatedItems(Relations);
+            
+            if (!RelatedItems.isEmpty()) {
+                return false; 
+            }
+        }
+        
+        for (String Relations : UpwardsRelations) {
+            List<Item> RelatedItems = this.getUpwardsRelatedItems(Relations);
+            
+            if (!RelatedItems.isEmpty()) {
+                return false; 
+            }
+        }
+        
+        return !this.getFieldValue("Status").equals("Paid");
     }
 
 }

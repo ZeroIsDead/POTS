@@ -6,6 +6,7 @@ package DataAbstractions.base;
 
 import DataAbstractions.Item;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public class Supplier extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("Product");
+        this.reader.setFileName("Product");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> ItemDetailList = this.reader.FitlerData("SupplierID", ID);
@@ -68,4 +69,21 @@ public class Supplier extends Item {
         return ItemList;
     }
 
+    @Override
+    public Boolean CanBeDeleted() {
+        List<Item> RelatedItems = this.getDownwardsRelatedItems("Product");
+            
+        if (RelatedItems.isEmpty()) {
+            return true; 
+        }
+        
+        for (Item currentItem : RelatedItems) {
+            if (!currentItem.CanBeDeleted()) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
 }

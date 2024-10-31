@@ -10,6 +10,7 @@ package DataAbstractions;
 //import java.util.ArrayList;
 import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.DataWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,9 +62,30 @@ public abstract class Item {
     public List<String> getDetails() {
         return this.Details;
     }
-
+    
     public void setDetails(List<String> newDetails) {
         this.Details = newDetails;
+    }
+    
+    public String getFieldValue(String FieldName) {
+        int index = this.Fields.indexOf(FieldName);
+        
+        if (index == -1) { // Field Name Not Found
+            return null;
+        }
+        
+        return this.Details.get(index);
+    }
+    
+    public void setFieldValue(String FieldName, String Value) {
+        int index = this.Fields.indexOf(FieldName);
+        
+        if (index == -1) { // Field Name Not Found
+            return;
+        }
+        
+        this.Details.remove(index);
+        this.Details.add(index, Value);
     }
     
     public abstract List<Item> getUpwardsRelatedItems(String Type); // Get which PO the PR is in
@@ -73,5 +95,7 @@ public abstract class Item {
     public abstract void addRelatedItem(Item newItem);
 
     public abstract void deleteRelatedItem(Item newItem);
+    
+    public abstract Boolean CanBeDeleted();
     
 }

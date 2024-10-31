@@ -68,7 +68,12 @@ public class Payment extends Item {
             return;
         }
         
-        this.writer.setFilePath("POToPayment");
+//        A Payment can only contain POs of the same Supplier
+        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return;
+        }
+        
+        this.writer.setFileName("POToPayment");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -84,7 +89,7 @@ public class Payment extends Item {
             return;
         }
         
-        this.writer.setFilePath("POToPayment");
+        this.writer.setFileName("POToPayment");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -98,7 +103,7 @@ public class Payment extends Item {
         String ID = this.getID();
         
 //        Reading and Writing To The Relationship File
-        this.reader.setFilePath("POToPayment");
+        this.reader.setFileName("POToPayment");
         
 //        Get All Product/PR/PO Rows Related To The PR/PO/Payment
         List<List<String>> Relationship = this.reader.FitlerData("PaymentID", ID);
@@ -114,7 +119,7 @@ public class Payment extends Item {
         }
 
 //        Read Product File And Get All Related Products To PR/Sales
-        this.reader.setFilePath("PO");
+        this.reader.setFileName("PO");
 
         List<List<String>> ItemDetailList = reader.FitlerData("POID", RelatedItemIDList);
 
@@ -130,6 +135,11 @@ public class Payment extends Item {
         }
 
         return ItemList;
+    }
+
+    @Override
+    public Boolean CanBeDeleted() {
+        return false;
     }
 
 }

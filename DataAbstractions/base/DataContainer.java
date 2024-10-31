@@ -12,8 +12,8 @@ import java.util.List;
  * @author JONATHAN
  */
 public interface DataContainer {
-    public void setFilePath(String filePath);
-    public String getFilePath();
+    public void setFileName(String filePath);
+    public String getFileName();
     public List<List<String>> getData();
     public List<String> getRow(String key);
     public List<String> getColumn(String Field);
