@@ -11,6 +11,7 @@ package DataAbstractions;
 import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.DataWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,7 +46,7 @@ public abstract class Item {
     
     public String getID() {
         if (this.Details.isEmpty()) {
-            return "";
+            return null;
         }
         
         return this.Details.get(0);
@@ -64,7 +65,19 @@ public abstract class Item {
     }
     
     public void setDetails(List<String> newDetails) {
+        if (Details.size() != this.Fields.size()) {
+            return;
+        }
+        
         this.Details = newDetails;
+    }
+    
+    public void setDetails(String[] newDetails) {
+        if (newDetails.length != this.Fields.size()) {
+            return;
+        }
+        
+        this.Details = new ArrayList<>(Arrays.asList(newDetails)); // Creates a Mutable ArrayList With the Details
     }
     
     public String getFieldValue(String FieldName) {

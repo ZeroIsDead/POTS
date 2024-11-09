@@ -64,7 +64,7 @@ public class Payment extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("PO")) {
+        if (newItem == null || !newItem.getType().equals("PO")) {
             return;
         }
         
@@ -85,16 +85,23 @@ public class Payment extends Item {
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("PO")) {
+        if (newItem == null || !newItem.getType().equals("PO")) {
             return;
         }
         
-        this.writer.setFileName("POToPayment");
+        this.reader.setFileName("POToPayment");
         
         List<String> FileDataFormat = new ArrayList<>();
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
+        
+//        Checks if the Relationship Already Exists
+        if (this.reader.getCompositeRow(FileDataFormat) != null) {
+            return;
+        }
+
+        this.writer.setFileName("POToPayment");
         
         this.writer.deleteCompositeData(FileDataFormat);
     }

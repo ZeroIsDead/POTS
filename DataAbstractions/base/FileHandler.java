@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.io.FileReader;
+import java.util.Iterator;
 
 /**
  *
@@ -98,7 +99,7 @@ public class FileHandler implements DataWriter, DataContainer {
             String FilePath = this.parseFilePath(FileName);
             File file = new File(FilePath);
             if (!file.exists()) {
-                file.createNewFile(); // Set Up Cache Files
+                file.createNewFile();
             }
             this.FileName = FileName;
         } catch (IOException e) {
@@ -141,20 +142,23 @@ public class FileHandler implements DataWriter, DataContainer {
     public void appendData(List<String> Data) {
         this.data.add(Data);
         
-//        All Changes can only be in Cache before being transfered to main if asked to save
         this.writeData(this.data);
     }
 
     @Override
     public void updateData(List<String> Data) {
-        int iterator = 0;
-        for (List<String> rowData : this.data) {
+        int index = 0;
+        Iterator<List<String>> iter = this.data.iterator();
+
+        while (iter.hasNext()) {
+            List<String> rowData = iter.next();
+
             if (rowData.getFirst().equals(Data.getFirst())) {
-                this.data.remove(iterator);
-                this.data.add(iterator, rowData);
+                this.data.remove(index);
+                this.data.add(index, Data);
             }
             
-            iterator++;
+            index++;
         }
         
         this.writeData(this.data);
@@ -162,13 +166,17 @@ public class FileHandler implements DataWriter, DataContainer {
 
     @Override
     public void deleteData(String ID) {
-        int iterator = 0;
-        for (List<String> rowData : this.data) {
+        int index = 0;
+        Iterator<List<String>> iter = this.data.iterator();
+
+        while (iter.hasNext()) {
+            List<String> rowData = iter.next();
+
             if (rowData.getFirst().equals(ID)) {
-                this.data.remove(iterator);
+                this.data.remove(index);
             }
             
-            iterator++;
+            index++;
         }
         
         this.writeData(this.data);
@@ -176,49 +184,46 @@ public class FileHandler implements DataWriter, DataContainer {
 
     @Override
     public void updateCompositeData(List<String> Data, List<String> Keys) {
-        int iterator = 0;
-        for (List<String> rowData : this.data) {
-            int numKeysFound = 0;
-            for (String currentData : rowData) {
-                for (String Key : Keys) {
-                    if (currentData.equals(Key)) {
-                        numKeysFound++;
-                    }
-                    
-                    if (numKeysFound == Keys.size()) {
-                        this.data.remove(iterator);
-                        this.data.add(iterator, Data);
-                    }
+        int index = 0;
+        Iterator<List<String>> iter = this.data.iterator();
 
+        while (iter.hasNext()) {
+            List<String> rowData = iter.next();
+            int numKeysFound = 0;
+            for (String Key : Keys) {
+                if (rowData.contains(Key)) {
+                    numKeysFound++;
+                }
+
+                if (numKeysFound == Keys.size()) {
+                    this.data.remove(index);
+                    this.data.add(index, Data);
                 }
             }
             
-            
-            iterator++;
+            index++;
         }
         
+            
         this.writeData(this.data);
     }
 
     @Override
     public void deleteCompositeData(List<String> Keys ) {
-        int iterator = 0;
-        for (List<String> rowData : this.data) {
+        Iterator<List<String>> iter = this.data.iterator();
+        
+        while (iter.hasNext()) {
+            List<String> rowData = iter.next();
             int numKeysFound = 0;
-            for (String currentData : rowData) {
-                for (String Key : Keys) {
-                    if (currentData.equals(Key)) {
-                        numKeysFound++;
-                    }
-                    
-                    if (numKeysFound == Keys.size()) {
-                        this.data.remove(iterator);
-                    }
+            for (String Key : Keys) {
+                if (rowData.contains(Key)) {
+                    numKeysFound++;
+                }
+
+                if (numKeysFound == Keys.size()) {
+                    iter.remove();
                 }
             }
-            
-            
-            iterator++;
         }
         
         this.writeData(this.data);
@@ -264,14 +269,36 @@ public class FileHandler implements DataWriter, DataContainer {
     }
 
     @Override
-    public List<String> getRow(String key) {
+    public List<String> getRow(String Key) {
         for (List<String> rowData : this.data) {
-            if (rowData.getFirst().equals(key)) {
+            if (rowData.getFirst().equals(Key)) {
                 return rowData;
             }
         }
         
-        return new ArrayList<>();
+        return null;
+    }
+    
+    @Override
+    public List<String> getCompositeRow(List<String> Keys) {
+        
+        int iterator = 0;
+        for (List<String> rowData : this.data) {
+            int numKeysFound = 0;
+            for (String Key : Keys) {
+                if (rowData.contains(Key)) {
+                    numKeysFound++;
+                }
+
+                if (numKeysFound == Keys.size()) {
+                    return rowData;
+                }
+            }
+            
+            iterator++;
+        }
+        
+        return null;
     }
 
     @Override

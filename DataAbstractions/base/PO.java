@@ -18,10 +18,6 @@ public class PO extends Item {
         super(Details, Type, reader, writer);
     }
     
-    public void fuck() {
-        
-    }
-
     @Override
     public List<Item> getUpwardsRelatedItems(String Type) {
         switch (Type) {
@@ -61,21 +57,29 @@ public class PO extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("PR")) {
+        if (newItem == null || !newItem.getType().equals("PR")) {
             return;
         }
         
 //        A PO can only contain PRs of the same Supplier
-        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+        if (!this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
             return;
         }
         
-        this.writer.setFileName("PRToPO");
+        
+        this.reader.setFileName("PRToPO");
         
         List<String> FileDataFormat = new ArrayList<>();
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
+        
+//        Checks if the Relationship Already Exists
+        if (this.reader.getCompositeRow(FileDataFormat) != null) {
+            return;
+        }
+        
+        this.writer.setFileName("PRToPO");
         
         this.writer.appendData(FileDataFormat);
     }

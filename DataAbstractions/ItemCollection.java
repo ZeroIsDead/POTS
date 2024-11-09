@@ -82,10 +82,10 @@ public class ItemCollection {
     }
     
     private int getItemIndex(Item ItemInstance) {
-        String ItemInstanceID = ItemInstance.getDetails().get(0); // Get Item ID
+        String ItemInstanceID = ItemInstance.getID(); // Get Item ID
         
         for (int i = 0; i < this.ItemList.size(); i++) {
-            String CurrentItemID = this.ItemList.get(i).getDetails().get(0); // get Item ID
+            String CurrentItemID = this.ItemList.get(i).getID(); // get Item ID
             
             if (CurrentItemID.equals(ItemInstanceID)) { // Matches IDs
                 return i;
@@ -97,7 +97,7 @@ public class ItemCollection {
     
     private int getItemIndex(String ID) {
         for (int i = 0; i < this.ItemList.size(); i++) {
-            String CurrentItemID = this.ItemList.get(i).getDetails().get(0);
+            String CurrentItemID = this.ItemList.get(i).getID();
             
             if (CurrentItemID.equals(ID)) {
                 return i;
@@ -108,8 +108,15 @@ public class ItemCollection {
     }
     
     public Item createItem(List<String> Details) {
-        //Check if item exist in list and If Data Size Matches
-        if (Details.size() != this.FieldNames.size() || this.CheckItemInCollection(Details)) {
+//        Check If Data Size Matches
+        if (Details.size() != this.FieldNames.size()) {
+            return null;
+        }
+        
+//        Check if Item ID Exists
+        int itemIndex = this.getItemIndex(Details.get(0));
+        
+        if (itemIndex == -1) {
             return null;
         }
         
@@ -142,57 +149,50 @@ public class ItemCollection {
     }
     
     public Boolean removeItem(Item ItemInstance) {
-        int count = 0;
-        for (Item currentItem : this.ItemList) {
-            if (currentItem.equals(ItemInstance)) {
-                
-//                If Item Has Any Relationship or Item has Certain Status Then No Delete
-                if (!currentItem.CanBeDeleted()) { 
-                    return false;
-                }
-                
-                this.ItemList.remove(count);
-                this.UpdateFile();
+        int index = this.getItemIndex(ItemInstance);
 
-                return true;
-            }
-            count++;
+        if (index == -1) {
+            return false;
         }
         
-        return false;
+        Item currentItem = this.ItemList.get(index);
+        
+//        If Item Has Any Relationship or Item has Certain Status Then No Delete
+        if (!currentItem.CanBeDeleted()) { 
+            return false;
+        }
+        
+        this.ItemList.remove(index);
+        this.UpdateFile();
+
+        return true;
     }
     
     public Boolean removeItem(String ID) {
-        
-        int count = 0;
-        for (Item currentItem : this.ItemList) {
-            List<String> currentItemDetails = currentItem.getDetails();
-            
-            if (currentItemDetails.get(0).equals(ID)) {
-                
-//                If Item Has Any Relationship or Item has Certain Status Then No Delete
-                if (!currentItem.CanBeDeleted()) { 
-                    return false;
-                }
-                
-                this.ItemList.remove(count);
-                this.UpdateFile();
+        int index = this.getItemIndex(ID);
 
-                return true;
-            }
-            count++;
+        if (index == -1) {
+            return false;
         }
         
-        return false;
+        Item currentItem = this.ItemList.get(index);
+        
+//        If Item Has Any Relationship or Item has Certain Status Then No Delete
+        if (!currentItem.CanBeDeleted()) { 
+            return false;
+        }
+        
+        this.ItemList.remove(index);
+        this.UpdateFile();
+
+        return true;
     }
     
     public List<String> getColumn(String Field) {
-        int WantedFieldIndex = this.FieldNames.indexOf(Field);
-        
         List<String> ColumnData = new ArrayList<>();
         
         for (Item CurrentItem : this.ItemList) {
-            String CurrentItemFieldValue = CurrentItem.getDetails().get(WantedFieldIndex);
+            String CurrentItemFieldValue = CurrentItem.getFieldValue(Field);
             ColumnData.add(CurrentItemFieldValue);
         }
         
@@ -220,9 +220,8 @@ public class ItemCollection {
     public List<Item> filter(List<String> Fields, List<String> Values) { // Field and Values Match 1 to 1 -> index 0 with index 0, etc
         List<Integer> indexes = new ArrayList<>();
         
-//        Creates a List of n 1s;
+//        Creates a List of n 1s where n is the size of the collection
         indexes.addAll(Collections.nCopies(this.getCollectionSize(), 1));
-        
         
 //        If Value in the Corresponding Field and Row is Different, Then Remove
         for (int i = 0; i < Fields.size() && i < Values.size(); i++) {
@@ -231,7 +230,12 @@ public class ItemCollection {
             String FieldValue = Values.get(i);
             
             for (int j = 0; j < ColumnData.size(); j++) {
-                if (indexes.get(j) != 0 && !ColumnData.get(j).equals(FieldValue)) {
+                if (indexes.get(j) == 0) { // If Index is Already Invalid then continue
+                    continue;
+                }
+                
+//                Checks if The value of that row in the Corresponding Field is Equal to the Field Value
+                if (!ColumnData.get(j).equals(FieldValue)) { 
                     indexes.remove(j);
                     indexes.add(j, 0);
                 }

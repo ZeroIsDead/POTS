@@ -59,7 +59,7 @@ public class PR extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("Product")) {
+        if (newItem == null || !newItem.getType().equals("Product")) {
             return;
         }
         
@@ -68,21 +68,27 @@ public class PR extends Item {
             return;
         }
         
-        this.writer.setFileName("ProductToPR");
+        this.reader.setFileName("ProductToPR");
         
         List<String> FileDataFormat = new ArrayList<>();
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
         FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
-
+        
+//        Checks if the Relationship Already Exists
+        if (this.reader.getCompositeRow(FileDataFormat) != null) {
+            return;
+        }
+        
+        this.writer.setFileName("ProductToPR");
         
         this.writer.appendData(FileDataFormat);
     }
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("Product")) {
+        if (newItem == null || !newItem.getType().equals("Product")) {
             return;
         }
         

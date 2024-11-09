@@ -38,7 +38,7 @@ public class Sales extends Item {
     
     @Override
     public void addRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("Product")) {
+        if (newItem == null || !newItem.getType().equals("Product")) {
             return;
         }
 
@@ -47,7 +47,7 @@ public class Sales extends Item {
             return;
         }
         
-        this.writer.setFileName("ProductToSales");
+        this.reader.setFileName("ProductToSales");
         
         List<String> FileDataFormat = new ArrayList<>();
         
@@ -55,12 +55,19 @@ public class Sales extends Item {
         FileDataFormat.add(newItem.getID());
         FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
         
+//        Checks if the Relationship Already Exists
+        if (this.reader.getCompositeRow(FileDataFormat) != null) {
+            return;
+        }
+        
+        this.writer.setFileName("ProductToSales");
+        
         this.writer.appendData(FileDataFormat);
     }
 
     @Override
     public void deleteRelatedItem(Item newItem) {
-        if (!newItem.getType().equals("Product")) {
+        if (newItem == null || !newItem.getType().equals("Product")) {
             return;
         }
         

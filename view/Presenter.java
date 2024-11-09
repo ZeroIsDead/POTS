@@ -4,8 +4,6 @@
  */
 package view;
 
-import javax.swing.*;
-
 /**
  *
  * @author JONATHAN
