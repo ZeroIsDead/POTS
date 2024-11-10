@@ -10,6 +10,7 @@ import DataAbstractions.base.ItemFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -116,7 +117,7 @@ public class ItemCollection {
 //        Check if Item ID Exists
         int itemIndex = this.getItemIndex(Details.get(0));
         
-        if (itemIndex == -1) {
+        if (itemIndex != -1) {
             return null;
         }
         
@@ -281,6 +282,12 @@ public class ItemCollection {
         } 
 
         return FilteredItemList;
+    }
+    
+    public List<Item> getSortedItems(Comparator<Item> lambda) {
+        List<Item> SortedList = new ArrayList<>(this.ItemList);
+        SortedList.sort(lambda);
+        return SortedList;
     }
     
     public Boolean isEmpty() {

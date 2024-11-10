@@ -5,7 +5,6 @@
 package com.mycompany.pots;
 
 import DataAbstractions.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,6 +42,16 @@ public class POTS {
 //        POCollection.updateItem(PO);
         
         PO.setFieldValue("Date", "10/10/25");
+        
+        ItemCollection ProductCollection = Factory.createItemCollection("Product");
+        
+        List<Item> SortedList = ProductCollection.getSortedItems((a, b) -> {
+            return (Integer.parseInt(a.getFieldValue("Quantity")) / Integer.parseInt(a.getFieldValue("Threshold"))) - (Integer.parseInt(b.getFieldValue("Quantity")) / Integer.parseInt(b.getFieldValue("Threshold"))) ;
+        });
+        
+        for (Item SortedProduct : SortedList) {
+            System.out.println(SortedProduct);
+        }
         
         POCollection.updateItem(PO);
         

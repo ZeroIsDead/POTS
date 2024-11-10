@@ -1,4 +1,4 @@
 ProductID;Name;SupplierID;Brand;Quantity;Threshold;PurchasePrice;SellingPrice;Category;
 1;Banana;1;Bob;1000;10;2;100;Fruit
-2;Apple;1;Bob;1000;10;2;100;Fruit
-3;Kiwi;1;Bob;1000;10;2;100;Fruit
+2;Apple;1;Bob;1000;100;2;100;Fruit
+3;Kiwi;1;Bob;1000;50;2;100;Fruit
