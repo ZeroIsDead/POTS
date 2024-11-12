@@ -12,7 +12,7 @@ import java.util.List;
  * @author JONATHAN
  */
 public class ItemFactory {
-    public Item createItem(List<String> RowData, String Type, DataContainer reader, DataWriter writer) {
+    public Item createItem(List<String> RowData, String Type, DataReader reader, DataWriter writer) {
         switch (Type) {
             case "PO" -> {
                 return new PO(RowData, Type, reader, writer);

@@ -4,7 +4,6 @@
  */
 package DataAbstractions;
 
-import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.DataWriter;
 import DataAbstractions.base.ItemFactory;
 import java.util.ArrayList;
@@ -12,6 +11,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+import DataAbstractions.base.DataReader;
 
 /**
  *
@@ -20,12 +22,12 @@ import java.util.List;
 public class ItemCollection {
     private final List<String> FieldNames;
     private final List<Item> ItemList;
-    private final DataContainer reader;
+    private final DataReader reader;
     private final DataWriter writer;
     private final ItemFactory Factory;
     private final String Type;
 
-    public ItemCollection(List<Item> newItemList, DataContainer newReader, DataWriter newWriter, ItemFactory newFactory, String Type) {
+    public ItemCollection(List<Item> newItemList, DataReader newReader, DataWriter newWriter, ItemFactory newFactory, String Type) {
         this.ItemList = newItemList;
         this.reader = newReader;
         this.writer = newWriter;
@@ -135,18 +137,20 @@ public class ItemCollection {
         return this.createItem(Details);
     }
     
-    public void updateItem(Item ItemInstance) {
+    public Boolean updateItem(Item ItemInstance) {
         
         int itemIndex = this.getItemIndex(ItemInstance);
         
 //        Check if ID is Same But The Details Are Different
         if (itemIndex != -1 && !this.CheckItemInCollection(ItemInstance)) {
-            return;
+            return false;
         }
         
         this.ItemList.remove(itemIndex);
         this.ItemList.add(itemIndex, ItemInstance);
         this.UpdateFile();
+        
+        return true;
     }
     
     public Boolean removeItem(Item ItemInstance) {
@@ -282,6 +286,12 @@ public class ItemCollection {
         } 
 
         return FilteredItemList;
+    }
+    
+    public List<Item> filter(Predicate<Item> lambda) {
+        List<Item> SortedList = new ArrayList<>(this.ItemList);
+        SortedList.stream().filter(lambda).collect(Collectors.toList());
+        return SortedList;
     }
     
     public List<Item> getSortedItems(Comparator<Item> lambda) {

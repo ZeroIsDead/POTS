@@ -4,12 +4,12 @@
  */
 package DataAbstractions;
 
-import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.DataWriter;
 import DataAbstractions.base.FileHandler;
 import DataAbstractions.base.ItemFactory;
 import java.util.ArrayList;
 import java.util.List;
+import DataAbstractions.base.DataReader;
 
 /**
  *
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ItemCollectionFactory {
     public ItemCollection createItemCollection(String Type) {
-        DataContainer reader = new FileHandler(Type);
+        DataReader reader = new FileHandler(Type);
         DataWriter writer = new FileHandler(Type);
         
         List<List<String>> ItemDetailList = reader.getData();

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Payment extends Item {
 
-    public Payment(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public Payment(List<String> Details, String Type, DataReader reader, DataWriter writer) {
         super(Details, Type, reader, writer);
     }
 
@@ -63,14 +63,14 @@ public class Payment extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
+    public Boolean addRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("PO")) {
-            return;
+            return false;
         }
         
 //        A Payment can only contain POs of the same Supplier
-        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
-            return;
+        if (!this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return false;
         }
         
         this.writer.setFileName("POToPayment");
@@ -81,12 +81,14 @@ public class Payment extends Item {
         FileDataFormat.add(newItem.getID());
         
         this.writer.appendData(FileDataFormat);
+        
+        return true;
     }
 
     @Override
-    public void deleteRelatedItem(Item newItem) {
+    public Boolean deleteRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("PO")) {
-            return;
+            return false;
         }
         
         this.reader.setFileName("POToPayment");
@@ -98,12 +100,14 @@ public class Payment extends Item {
         
 //        Checks if the Relationship Already Exists
         if (this.reader.getCompositeRow(FileDataFormat) != null) {
-            return;
+            return false;
         }
 
         this.writer.setFileName("POToPayment");
         
         this.writer.deleteCompositeData(FileDataFormat);
+        
+        return true;
     }
     
     private List<Item> getPORelatedToPayment() {

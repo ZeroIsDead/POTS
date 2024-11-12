@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class PR extends Item {
 
-    public PR(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public PR(List<String> Details, String Type, DataReader reader, DataWriter writer) {
         super(Details, Type, reader, writer);
     }
 
@@ -58,14 +58,14 @@ public class PR extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
+    public Boolean addRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("Product")) {
-            return;
+            return false;
         }
         
 //        A PR can only contain Products of the same Supplier
-        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
-            return;
+        if (!this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return false;
         }
         
         this.reader.setFileName("ProductToPR");
@@ -74,22 +74,24 @@ public class PR extends Item {
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
-        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        FileDataFormat.add(newItem.getFieldValue("Quantity")); // Quantity of Item
         
 //        Checks if the Relationship Already Exists
         if (this.reader.getCompositeRow(FileDataFormat) != null) {
-            return;
+            return false;
         }
         
         this.writer.setFileName("ProductToPR");
         
         this.writer.appendData(FileDataFormat);
+        
+        return true;
     }
 
     @Override
-    public void deleteRelatedItem(Item newItem) {
+    public Boolean deleteRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("Product")) {
-            return;
+            return false;
         }
         
         this.writer.setFileName("ProductToPR");
@@ -101,6 +103,8 @@ public class PR extends Item {
         FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
         
         this.writer.deleteCompositeData(FileDataFormat);
+        
+        return true;
     }
     
     private List<Item> getPORelatedToPR() {

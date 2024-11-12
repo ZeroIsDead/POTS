@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author JONATHAN
  */
-public interface DataContainer {
+public interface DataReader {
     public void setFileName(String filePath);
     public String getFileName();
     public List<List<String>> getData();

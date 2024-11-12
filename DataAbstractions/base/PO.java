@@ -14,7 +14,7 @@ import java.util.List;
  * @author JONATHAN
  */
 public class PO extends Item {
-    public PO(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public PO(List<String> Details, String Type, DataReader reader, DataWriter writer) {
         super(Details, Type, reader, writer);
     }
     
@@ -56,14 +56,14 @@ public class PO extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
+    public Boolean addRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("PR")) {
-            return;
+            return false;
         }
         
 //        A PO can only contain PRs of the same Supplier
         if (!this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
-            return;
+            return false;
         }
         
         
@@ -76,18 +76,20 @@ public class PO extends Item {
         
 //        Checks if the Relationship Already Exists
         if (this.reader.getCompositeRow(FileDataFormat) != null) {
-            return;
+            return false;
         }
-        
+         
         this.writer.setFileName("PRToPO");
         
         this.writer.appendData(FileDataFormat);
+        
+        return true;
     }
 
     @Override
-    public void deleteRelatedItem(Item newItem) {
+    public Boolean deleteRelatedItem(Item newItem) {
         if (!newItem.getType().equals("PR")) {
-            return;
+            return false;
         }
         
         this.writer.setFileName("PRToPO");
@@ -98,6 +100,8 @@ public class PO extends Item {
         FileDataFormat.add(newItem.getID());
         
         this.writer.deleteCompositeData(FileDataFormat);
+        
+        return true;
     }
     
     private List<Item> getPaymentRelatedToPO() {

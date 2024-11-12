@@ -19,7 +19,7 @@ import java.util.Iterator;
  *
  * @author JONATHAN
  */
-public class FileHandler implements DataWriter, DataContainer {
+public class FileHandler implements DataWriter, DataReader {
     private String FileName;
     private FileWriter writer;
     private BufferedReader reader;

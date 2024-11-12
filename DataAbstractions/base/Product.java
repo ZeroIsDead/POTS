@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class Product extends Item {
 
-    public Product(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public Product(List<String> Details, String Type, DataReader reader, DataWriter writer) {
         super(Details, Type, reader, writer);
     }
 
@@ -63,10 +63,10 @@ public class Product extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {}
+    public Boolean addRelatedItem(Item newItem) {return false;}
 
     @Override
-    public void deleteRelatedItem(Item newItem) {}
+    public Boolean deleteRelatedItem(Item newItem) {return false;}
     
     private List<Item> getItemRelatedToProduct(String Type) {
         String ID = this.getID();

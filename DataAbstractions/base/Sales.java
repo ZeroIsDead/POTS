@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class Sales extends Item {
 
-    public Sales(List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public Sales(List<String> Details, String Type, DataReader reader, DataWriter writer) {
         super(Details, Type, reader, writer);
     }
 
@@ -36,14 +36,14 @@ public class Sales extends Item {
     }
     
     @Override
-    public void addRelatedItem(Item newItem) {
+    public Boolean addRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("Product")) {
-            return;
+            return false;
         }
 
 //        A Sale can only contain Products of the same Supplier
-        if (this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
-            return;
+        if (!this.getFieldValue("SupplierID").equals(newItem.getFieldValue("SupplierID"))) {
+            return false;
         }
         
         this.reader.setFileName("ProductToSales");
@@ -52,22 +52,24 @@ public class Sales extends Item {
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
-        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        FileDataFormat.add(newItem.getFieldValue("Quantity")); // Quantity of Item
         
 //        Checks if the Relationship Already Exists
         if (this.reader.getCompositeRow(FileDataFormat) != null) {
-            return;
+            return false;
         }
         
         this.writer.setFileName("ProductToSales");
         
         this.writer.appendData(FileDataFormat);
+        
+        return true;
     }
 
     @Override
-    public void deleteRelatedItem(Item newItem) {
+    public Boolean deleteRelatedItem(Item newItem) {
         if (newItem == null || !newItem.getType().equals("Product")) {
-            return;
+            return false;
         }
         
         this.writer.setFileName("ProductToSales");
@@ -79,6 +81,8 @@ public class Sales extends Item {
         FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
         
         this.writer.deleteCompositeData(FileDataFormat);
+        
+        return true;
     }
     
     private List<Item> getProductsRelatedToSale() {

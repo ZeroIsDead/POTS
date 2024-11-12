@@ -4,15 +4,15 @@
  */
 package DataAbstractions;
 
-//import DataAbstractions.base.DataContainer;
+//import DataAbstractions.base.DataReader;
 //import DataAbstractions.base.DataWriter;
 //import DataAbstractions.base.FileHandler;
 //import java.util.ArrayList;
-import DataAbstractions.base.DataContainer;
 import DataAbstractions.base.DataWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import DataAbstractions.base.DataReader;
 
 /**
  *
@@ -23,9 +23,9 @@ public abstract class Item {
     protected List<String> Details;
     protected String Type;
     protected DataWriter writer;
-    protected DataContainer reader;
+    protected DataReader reader;
     
-    public Item (List<String> Details, String Type, DataContainer reader, DataWriter writer) {
+    public Item (List<String> Details, String Type, DataReader reader, DataWriter writer) {
         this.Type = Type;
         this.reader = reader;
         this.writer = writer;
@@ -64,20 +64,22 @@ public abstract class Item {
         return this.Details;
     }
     
-    public void setDetails(List<String> newDetails) {
+    public Boolean setDetails(List<String> newDetails) {
         if (Details.size() != this.Fields.size()) {
-            return;
+            return false;
         }
         
         this.Details = newDetails;
+        return true;
     }
     
-    public void setDetails(String[] newDetails) {
+    public Boolean setDetails(String[] newDetails) {
         if (newDetails.length != this.Fields.size()) {
-            return;
+            return false;
         }
         
         this.Details = new ArrayList<>(Arrays.asList(newDetails)); // Creates a Mutable ArrayList With the Details
+        return true;
     }
     
     public String getFieldValue(String FieldName) {
@@ -90,24 +92,25 @@ public abstract class Item {
         return this.Details.get(index);
     }
     
-    public void setFieldValue(String FieldName, String Value) {
+    public Boolean setFieldValue(String FieldName, String Value) {
         int index = this.Fields.indexOf(FieldName);
         
         if (index == -1) { // Field Name Not Found
-            return;
+            return false;
         }
         
         this.Details.remove(index);
         this.Details.add(index, Value);
+        return true;
     }
     
     public abstract List<Item> getUpwardsRelatedItems(String Type); // Get which PO the PR is in
     
     public abstract List<Item> getDownwardsRelatedItems(String Type); // Get List of PR of a PO
 
-    public abstract void addRelatedItem(Item newItem);
+    public abstract Boolean addRelatedItem(Item newItem);
 
-    public abstract void deleteRelatedItem(Item newItem);
+    public abstract Boolean deleteRelatedItem(Item newItem);
     
     public abstract Boolean CanBeDeleted();
     
