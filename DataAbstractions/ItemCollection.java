@@ -123,7 +123,7 @@ public class ItemCollection {
             return null;
         }
         
-        Item newItem = this.Factory.createItem(Details, this.Type, this.reader, this.writer);
+        Item newItem = this.Factory.createItem(Details, this.Type);
         
         this.ItemList.add(newItem);
         this.UpdateFile();

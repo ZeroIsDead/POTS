@@ -12,7 +12,7 @@ import java.util.List;
  * @author JONATHAN
  */
 public interface DataReader {
-    public void setFileName(String filePath);
+    public Boolean setFileName(String filePath);
     public String getFileName();
     public List<List<String>> getData();
     public List<String> getRow(String Key);

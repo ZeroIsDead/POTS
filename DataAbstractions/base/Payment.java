@@ -141,7 +141,7 @@ public class Payment extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(RowData, "PO", this.reader, this.writer);
+            Item newItem = Factory.createItem(RowData, "PO");
             ItemList.add(newItem);
         }
 

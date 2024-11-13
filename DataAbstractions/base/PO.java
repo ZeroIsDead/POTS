@@ -135,7 +135,7 @@ public class PO extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(RowData, "Payment", this.reader, this.writer);
+            Item newItem = Factory.createItem(RowData, "Payment");
             ItemList.add(newItem);
         }
 
@@ -173,7 +173,7 @@ public class PO extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(RowData, "PR", this.reader, this.writer);
+            Item newItem = Factory.createItem(RowData, "PR");
             ItemList.add(newItem);
         }
 

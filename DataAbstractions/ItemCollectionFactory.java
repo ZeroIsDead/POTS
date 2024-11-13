@@ -27,7 +27,7 @@ public class ItemCollectionFactory {
         ItemFactory Factory = new ItemFactory();
         
         for (List<String> RowData : ItemDetailList) {
-            Item newItem = Factory.createItem(RowData, Type, reader, writer);
+            Item newItem = Factory.createItem(RowData, Type);
 
             ItemList.add(newItem);
         }

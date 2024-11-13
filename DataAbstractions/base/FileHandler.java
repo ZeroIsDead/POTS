@@ -23,18 +23,24 @@ public class FileHandler implements DataWriter, DataReader {
     private String FileName;
     private FileWriter writer;
     private BufferedReader reader;
-    private List<List<String>> data;
-    private List<String> fields;
-    
-    public FileHandler() {
-        this.data = new ArrayList<>();
-        this.fields = new ArrayList<>();
-    }
+    private List<List<String>> data = new ArrayList<>();
+    private List<String> fields = new ArrayList<>();
+    private final List<String> Permissions;
     
     public FileHandler(String FileName) {
-        this.data = new ArrayList<>();
-        this.fields = new ArrayList<>();
+        this.Permissions = new ArrayList<>();
+        this.Permissions.add(FileName);
+        
         this.setFileName(FileName);
+    }
+    
+    public FileHandler(String FileName, List<String> Permissions) {
+        this.Permissions = Permissions;
+        this.setFileName(FileName);
+    }
+    
+    public FileHandler(List<String> Permissions) {
+        this.Permissions = Permissions;
     }
     
     private String parseFilePath(String Type) {
@@ -94,7 +100,11 @@ public class FileHandler implements DataWriter, DataReader {
     }
 
     @Override
-    public final void setFileName(String FileName) {
+    public final Boolean setFileName(String FileName) {
+        if (!this.Permissions.contains(FileName)) {
+            return false;
+        }
+        
         try {
             String FilePath = this.parseFilePath(FileName);
             File file = new File(FilePath);
@@ -102,12 +112,14 @@ public class FileHandler implements DataWriter, DataReader {
                 file.createNewFile();
             }
             this.FileName = FileName;
+            
         } catch (IOException e) {
             System.out.println("File Not Found!");
-            return;
+            return false;
         }
         
         this.getFieldAndData();
+        return true;
     }
     
     @Override
@@ -116,7 +128,7 @@ public class FileHandler implements DataWriter, DataReader {
     }
 
     @Override
-    public void writeData(List<List<String>> Data) {
+    public Boolean writeData(List<List<String>> Data) {
         Data = this.sortData(Data);
         
         try {
@@ -132,21 +144,23 @@ public class FileHandler implements DataWriter, DataReader {
             
             this.closeFileWriter();
             
+            return true;
+            
         } catch (IOException e) {
             System.out.println(e);
+            return false;
         }
-
     }
 
     @Override
-    public void appendData(List<String> Data) {
+    public Boolean appendData(List<String> Data) {
         this.data.add(Data);
         
-        this.writeData(this.data);
+        return this.writeData(this.data);
     }
 
     @Override
-    public void updateData(List<String> Data) {
+    public Boolean updateData(List<String> Data) {
         int index = 0;
         Iterator<List<String>> iter = this.data.iterator();
 
@@ -161,11 +175,11 @@ public class FileHandler implements DataWriter, DataReader {
             index++;
         }
         
-        this.writeData(this.data);
+        return this.writeData(this.data);
     }
 
     @Override
-    public void deleteData(String ID) {
+    public Boolean deleteData(String ID) {
         int index = 0;
         Iterator<List<String>> iter = this.data.iterator();
 
@@ -179,11 +193,11 @@ public class FileHandler implements DataWriter, DataReader {
             index++;
         }
         
-        this.writeData(this.data);
+        return this.writeData(this.data);
     }
 
     @Override
-    public void updateCompositeData(List<String> Data, List<String> Keys) {
+    public Boolean updateCompositeData(List<String> Data, List<String> Keys) {
         int index = 0;
         Iterator<List<String>> iter = this.data.iterator();
 
@@ -205,11 +219,11 @@ public class FileHandler implements DataWriter, DataReader {
         }
         
             
-        this.writeData(this.data);
+        return this.writeData(this.data);
     }
 
     @Override
-    public void deleteCompositeData(List<String> Keys ) {
+    public Boolean deleteCompositeData(List<String> Keys ) {
         Iterator<List<String>> iter = this.data.iterator();
         
         while (iter.hasNext()) {
@@ -226,7 +240,7 @@ public class FileHandler implements DataWriter, DataReader {
             }
         }
         
-        this.writeData(this.data);
+        return this.writeData(this.data);
     }
     
     private void getFieldAndData() {

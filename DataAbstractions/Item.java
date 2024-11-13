@@ -37,6 +37,9 @@ public abstract class Item {
     public String toString() {
         String Buffer = "";
         
+        System.out.println(this.Fields);
+        System.out.println(this.Details);
+        
         for (int i = 0; i < this.Fields.size() && i < this.Details.size(); i++) {
             Buffer += String.format("%s: %s\n", this.Fields.get(i), this.Details.get(i));
         }

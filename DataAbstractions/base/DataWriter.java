@@ -11,12 +11,12 @@ import java.util.List;
  * @author JONATHAN
  */
 public interface DataWriter {
-    public void setFileName(String filePath);
+    public Boolean setFileName(String filePath);
     public String getFileName();
-    public void writeData(List<List<String>> Data);
-    public void appendData(List<String> Data);
-    public void updateData(List<String> Data);
-    public void deleteData(String ID);
-    public void updateCompositeData(List<String> Data, List<String> Keys);
-    public void deleteCompositeData(List<String> Keys);
+    public Boolean writeData(List<List<String>> Data);
+    public Boolean appendData(List<String> Data);
+    public Boolean updateData(List<String> Data);
+    public Boolean deleteData(String ID);
+    public Boolean updateCompositeData(List<String> Data, List<String> Keys);
+    public Boolean deleteCompositeData(List<String> Keys);
 }

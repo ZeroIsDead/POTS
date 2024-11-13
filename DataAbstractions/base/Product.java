@@ -103,7 +103,7 @@ public class Product extends Item {
 
             ItemFactory Factory = new ItemFactory();
 
-            Item newItem = Factory.createItem(RowData, Type, this.reader, this.writer);
+            Item newItem = Factory.createItem(RowData, Type);
             ItemList.add(newItem);
         }
 
