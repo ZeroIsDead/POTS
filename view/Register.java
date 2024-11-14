@@ -13,12 +13,24 @@ import java.util.List;
  * @author JONATHAN
  */
 public class Register extends javax.swing.JFrame {
-
+    private final Item User;
+    
     /**
      * Creates new form Register
+     * @param User
      */
-    public Register() {
+    public Register(Item User) {
         initComponents();
+        this.User = User;
+        
+        setTitle("Register");
+    }
+    
+    public Register(Item User, List<String> Permissions) {
+        initComponents();
+        this.User = User;
+        
+        setTitle("Register");
     }
 
     /**
@@ -42,6 +54,7 @@ public class Register extends javax.swing.JFrame {
         RoleLabel = new javax.swing.JLabel();
         RoleField = new javax.swing.JTextField();
         RegisterButton = new javax.swing.JButton();
+        MenuButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,6 +95,18 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
+        MenuButton.setText("Menu");
+        MenuButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                MenuButtonMouseClicked(evt);
+            }
+        });
+        MenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,8 +114,15 @@ public class Register extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(170, 170, 170)
+                        .addComponent(RegisterButton))
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(MenuButton)
+                                .addGap(83, 83, 83)
+                                .addComponent(PageTitle))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(RoleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -112,21 +144,17 @@ public class Register extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(UsernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                                     .addComponent(FirstNameField)
-                                    .addComponent(LastNameField)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(170, 170, 170)
-                        .addComponent(RegisterButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(179, 179, 179)
-                        .addComponent(PageTitle)))
+                                    .addComponent(LastNameField))))))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(PageTitle)
-                .addGap(39, 39, 39)
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PageTitle)
+                    .addComponent(MenuButton))
+                .addGap(35, 35, 35)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(UsernameField)
                     .addGroup(layout.createSequentialGroup()
@@ -222,8 +250,23 @@ public class Register extends javax.swing.JFrame {
 //            return; Show Error Message
         }
         
+        new Menu(this.User).setVisible(true);
         // Make Event to Change To another JFrame
     }//GEN-LAST:event_RegisterButtonMouseClicked
+
+    private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
+        // TODO add your handling code here:
+        
+        
+    }//GEN-LAST:event_MenuButtonActionPerformed
+
+    private void MenuButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MenuButtonMouseClicked
+        // TODO add your handling code here:
+        Menu window = new Menu(this.User);
+        
+        window.setVisible(true);
+        setVisible(false);
+    }//GEN-LAST:event_MenuButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -255,7 +298,20 @@ public class Register extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Register().setVisible(true);
+                ItemCollectionFactory Factory = new ItemCollectionFactory();
+                ItemCollection UserCollection = Factory.createItemCollection("User");
+                
+                String ID = "peter";
+                
+                Item User = UserCollection.getItem(ID);
+    
+                if (User == null) {
+                    return;
+                }
+            
+                System.out.println(User.getType());
+                
+                new Register(User).setVisible(true);
             }
         });
     }
@@ -265,6 +321,7 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel FirstNameLabel;
     private javax.swing.JTextField LastNameField;
     private javax.swing.JLabel LastNameLabel;
+    private javax.swing.JButton MenuButton;
     private javax.swing.JLabel PageTitle;
     private javax.swing.JPasswordField PasswordField;
     private javax.swing.JLabel PasswordLabel;

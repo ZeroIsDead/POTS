@@ -5,6 +5,7 @@
 package com.mycompany.pots;
 
 import DataAbstractions.Item;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,9 +16,9 @@ import java.util.List;
 public class PermissionHandler {
     private final HashMap<String, HashMap<String, List<String>>> Permissions = new HashMap<>();
     
-    PermissionHandler() {
+    public PermissionHandler() {
         HashMap<String, List<String>> IMPermissions = new HashMap<>();
-        
+       
         IMPermissions.put("Product", List.of("Add", "Edit", "Delete")); // Full Access to Item
         IMPermissions.put("Supplier", List.of("Add", "Edit", "Delete")); // Full Access to Supplier
         IMPermissions.put("Stock Level", List.of("View", "Add", "Edit", "Delete")); // View and Update Stock Level
@@ -26,7 +27,7 @@ public class PermissionHandler {
         
         SMPermissions.put("Product", List.of("View")); // View Product
         SMPermissions.put("Sales", List.of("View", "Add", "Edit", "Delete")); // Full Access to Sales
-        SMPermissions.put("Sales Report", List.of("Generate")); // Generate Sales Report
+        SMPermissions.put("Sales Report", List.of("View")); // Generate Sales Report
         SMPermissions.put("Stock Level", List.of("View")); // View Stock Level
         SMPermissions.put("Purchase Requisition", List.of("Add")); //  View PR
         SMPermissions.put("Purhcase Order", List.of("View")); // View PO
@@ -46,13 +47,24 @@ public class PermissionHandler {
         
         HashMap<String, List<String>> AdminPermissions = new HashMap<>();
         
+        AdminPermissions.put("Purchase Order", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Purchase Requisition", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Payment", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Product", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Sales", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Supplier", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("User", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Sales Report", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Stock Level", List.of("View", "Add", "Edit", "Delete"));
+                
+        
 //        AdminPermissions.put("");
         
         Permissions.put("IM", IMPermissions);
         Permissions.put("PM", PMPermissions);
         Permissions.put("SM", SMPermissions);
         Permissions.put("FM", FMPermissions);
-        Permissions.put("Admin", AdminPermissions);
+        Permissions.put("admin", AdminPermissions);
     }
     
     public Boolean HasPermission(Item User, String Resource, String Action) {
@@ -87,5 +99,9 @@ public class PermissionHandler {
         if (!User.getType().equals("User")) {return null;}
         
         return this.Permissions.get(User.getFieldValue("Role"));
+    }
+    
+    public List<String> GetPermittedResources(Item User) {
+        return new ArrayList<>(this.Permissions.get(User.getFieldValue("Role")).keySet());
     }
 }
