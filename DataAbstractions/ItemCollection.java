@@ -48,11 +48,11 @@ public class ItemCollection {
         return Output;
     }
     
-    private void UpdateFile() {
+    public void UpdateFile() {
         List<List<String>> Data = new ArrayList<>(); // Turn Item Into Writable Format
         
         this.ItemList.forEach((Item currentItem) -> {
-            Data.add(currentItem.getDetails());
+            Data.add(Arrays.asList(currentItem.getDetails()));
         });
         
         this.writer.setFileName(this.Type);
@@ -66,7 +66,9 @@ public class ItemCollection {
     
     public Boolean CheckItemInCollection(Item ItemInstance) {
         for (Item CurrentItem : this.ItemList) {
-            if (CurrentItem.getDetails().equals(ItemInstance.getDetails())) {
+            Boolean SameDetails = Arrays.equals(CurrentItem.getDetails(), ItemInstance.getDetails());
+            
+            if (SameDetails) {
                 return true;
             }
         }
@@ -74,9 +76,11 @@ public class ItemCollection {
         return false;
     }
     
-    public Boolean CheckItemInCollection(List<String> Details) {
+    public Boolean CheckItemInCollection(String[] Details) {
         for (Item CurrentItem : this.ItemList) {
-            if (CurrentItem.getDetails().equals(Details)) {
+            Boolean SameDetails = Arrays.equals(CurrentItem.getDetails(), Details);
+            
+            if (SameDetails) {
                 return true;
             }
         }
@@ -90,7 +94,9 @@ public class ItemCollection {
         for (int i = 0; i < this.ItemList.size(); i++) {
             String CurrentItemID = this.ItemList.get(i).getID(); // get Item ID
             
-            if (CurrentItemID.equals(ItemInstanceID)) { // Matches IDs
+            Boolean SameID = CurrentItemID.equals(ItemInstanceID);
+            
+            if (SameID) { // Matches IDs
                 return i;
             }
         }
@@ -102,7 +108,9 @@ public class ItemCollection {
         for (int i = 0; i < this.ItemList.size(); i++) {
             String CurrentItemID = this.ItemList.get(i).getID();
             
-            if (CurrentItemID.equals(ID)) {
+            Boolean SameID = CurrentItemID.equals(ID);
+            
+            if (SameID) {
                 return i;
             }
         }
@@ -110,47 +118,24 @@ public class ItemCollection {
         return -1;
     }
     
-    public Item createItem(List<String> Details) {
+    public Item createItem(String[] Details) {
 //        Check If Data Size Matches
-        if (Details.size() != this.FieldNames.size()) {
+
+        Boolean SameSize = Details.length == this.FieldNames.size();
+        Boolean ItemFound = this.getItemIndex(Details[0]) != -1;
+
+        if (!SameSize || !ItemFound) {
             return null;
         }
         
-//        Check if Item ID Exists
-        int itemIndex = this.getItemIndex(Details.get(0));
+        List<String> MutableListOfDetails = new ArrayList<>(Arrays.asList(Details));
         
-        if (itemIndex != -1) {
-            return null;
-        }
-        
-        Item newItem = this.Factory.createItem(Details, this.Type);
+        Item newItem = this.Factory.createItem(MutableListOfDetails, this.Type);
         
         this.ItemList.add(newItem);
         this.UpdateFile();
         
         return newItem;
-    }
-    
-    public Item createItem(String[] DetailsArray) {
-        List<String> Details = Arrays.asList(DetailsArray);
-        
-        return this.createItem(Details);
-    }
-    
-    public Boolean updateItem(Item ItemInstance) {
-        
-        int itemIndex = this.getItemIndex(ItemInstance);
-        
-//        Check if ID is Same But The Details Are Different
-        if (itemIndex != -1 && !this.CheckItemInCollection(ItemInstance)) {
-            return false;
-        }
-        
-        this.ItemList.remove(itemIndex);
-        this.ItemList.add(itemIndex, ItemInstance);
-        this.UpdateFile();
-        
-        return true;
     }
     
     public Boolean removeItem(Item ItemInstance) {
@@ -205,11 +190,11 @@ public class ItemCollection {
     }
     
     public List<String> getFieldNames() {
-        return this.FieldNames;
+        return new ArrayList<>(this.FieldNames);
     }
     
     public List<Item> getAll() {
-        return this.ItemList;
+        return new ArrayList<>(this.ItemList);
     }
 
     public Item getItem(String ID) {

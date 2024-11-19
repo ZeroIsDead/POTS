@@ -78,7 +78,7 @@ public class Sales extends Item {
         
         FileDataFormat.add(this.getID());
         FileDataFormat.add(newItem.getID());
-        FileDataFormat.add(newItem.getDetails().get(0)); // Quantity of Item
+        FileDataFormat.add(newItem.getDetails()[0]); // Quantity of Item
         
         this.writer.deleteCompositeData(FileDataFormat);
         

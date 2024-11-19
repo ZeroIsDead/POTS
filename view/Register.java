@@ -205,10 +205,6 @@ public class Register extends javax.swing.JFrame {
         
         ItemCollection UserCollection = Factory.createItemCollection("User");
         
-        List<String> UserDetails = new ArrayList<>();
-        
-        
-        
         if (UsernameField.getText().isBlank()) {
             UsernameField.requestFocus();
             return;
@@ -237,21 +233,23 @@ public class Register extends javax.swing.JFrame {
             return;
         }
         
-        UserDetails.add(UsernameField.getText());
-        UserDetails.add(FirstNameField.getText());
-        UserDetails.add(LastNameField.getText());
-        UserDetails.add(PasswordField.getText());
-        UserDetails.add(RoleField.getText());
+        String Username = UsernameField.getText();
+        String FirstName = FirstNameField.getText();
+        String LastName = LastNameField.getText();
+        String Password = PasswordField.getText();
+        String Role = RoleField.getText();
 
+        String[] UserDetails = {Username, FirstName, LastName, Password, Role};
         
         Item newUser = UserCollection.createItem(UserDetails);
         
         if (newUser == null) {
-//            return; Show Error Message
+            new Menu(this.User).setVisible(true);
+            return;
         }
         
-        new Menu(this.User).setVisible(true);
-        // Make Event to Change To another JFrame
+        
+        System.out.println("Error");
     }//GEN-LAST:event_RegisterButtonMouseClicked
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed

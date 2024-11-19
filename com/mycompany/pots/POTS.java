@@ -46,7 +46,7 @@ public class POTS {
         PO.setFieldValue("Date", "10/10/25");
         
 //        Save changes to file
-        POCollection.updateItem(PO);
+        POCollection.UpdateFile();
         
         
 //      Create array with wanted field and values
@@ -74,14 +74,14 @@ public class POTS {
         ItemCollection PRCollection = Factory.createItemCollection("PR");
         
         // Create a list with the details of the PR
-        List<String> DetailsList = List.of("5","1","1","1");
+        String[] DetailsList = {"5","1","1","1"};
         
         // create item with the data from DetailsList
         Item PR = PRCollection.createItem(DetailsList);
         
         // If item exist then get the item instead
         if (PR == null) {
-            PR = PRCollection.getItem(DetailsList.get(0));
+            PR = PRCollection.getItem(DetailsList[0]);
         }
         
         ItemCollection ProductCollection = Factory.createItemCollection("Product");

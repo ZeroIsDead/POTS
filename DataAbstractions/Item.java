@@ -59,25 +59,19 @@ public abstract class Item {
         return this.Type;
     }
 
-    public List<String> getFields() {
-        return this.Fields;
+    public String[] getFields() {
+        return this.Fields.toArray(String[]::new);
     }
     
-    public List<String> getDetails() {
-        return this.Details;
-    }
-    
-    public Boolean setDetails(List<String> newDetails) {
-        if (Details.size() != this.Fields.size()) {
-            return false;
-        }
-        
-        this.Details = newDetails;
-        return true;
+    public String[] getDetails() {
+        return this.Details.toArray(String[]::new);
     }
     
     public Boolean setDetails(String[] newDetails) {
-        if (newDetails.length != this.Fields.size()) {
+        Boolean SameLength = newDetails.length != this.Fields.size();
+        Boolean SameID = this.getID().equals(newDetails[0]);
+        
+        if (SameLength && SameID) {
             return false;
         }
         

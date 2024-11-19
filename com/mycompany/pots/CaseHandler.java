@@ -5,6 +5,7 @@
 package com.mycompany.pots;
 
 import DataAbstractions.*;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,10 +27,21 @@ public class CaseHandler {
         ItemCollection UserCollection = Factory.createItemCollection("User");
         
         Item User = UserCollection.getItem(ID);
-
+        
+        
         if (User == null) {
             return;
         }
+        
+        String[] UDetails = User.getDetails();
+        
+        UDetails[0] = "1";
+        
+        System.out.println(Arrays.toString(UDetails));
+        
+        System.out.println(Arrays.toString(User.getDetails()));
+        
+        System.out.println(Arrays.toString(UserCollection.getItem(ID).getDetails()));
         
         System.out.println(User.getType());
         
@@ -55,7 +67,7 @@ public class CaseHandler {
                 System.out.println("\t" + i + " " + ResourcePermissions.get(i));
             }
         }
-            
+           
     }
 }
 

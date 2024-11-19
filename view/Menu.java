@@ -62,12 +62,10 @@ public class Menu extends javax.swing.JFrame {
                         case "Purchase Order" -> {
                             setVisible(false);
                             new PurchaseOrder(User).setVisible(true);
-                            
                         }
                         case "Purchase Requisition" -> {
                             setVisible(false);
                             new PurchaseRequisition(User).setVisible(true);
-                            
                         }
                         case "Product" -> {
                             setVisible(false);
