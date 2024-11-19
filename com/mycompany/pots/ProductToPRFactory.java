@@ -9,5 +9,5 @@ package com.mycompany.pots;
  * @author JONATHAN
  */
 public class ProductToPRFactory {
-    
+    // Create PR with List of Products
 }

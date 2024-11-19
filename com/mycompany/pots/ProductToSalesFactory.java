@@ -8,6 +8,6 @@ package com.mycompany.pots;
  *
  * @author JONATHAN
  */
-public class PRToPOFactory {
-    // Creates PO with List of PR
+public class ProductToSalesFactory {
+    // Creates Sales with List of Product
 }

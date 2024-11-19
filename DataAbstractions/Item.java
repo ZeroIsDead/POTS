@@ -37,9 +37,6 @@ public abstract class Item {
     public String toString() {
         String Buffer = "";
         
-        System.out.println(this.Fields);
-        System.out.println(this.Details);
-        
         for (int i = 0; i < this.Fields.size() && i < this.Details.size(); i++) {
             Buffer += String.format("%s: %s\n", this.Fields.get(i), this.Details.get(i));
         }
@@ -71,7 +68,7 @@ public abstract class Item {
         Boolean SameLength = newDetails.length != this.Fields.size();
         Boolean SameID = this.getID().equals(newDetails[0]);
         
-        if (SameLength && SameID) {
+        if (!SameLength || !SameID) {
             return false;
         }
         
