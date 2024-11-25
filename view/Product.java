@@ -7,6 +7,7 @@ package view;
 import DataAbstractions.Item;
 import DataAbstractions.ItemCollection;
 import DataAbstractions.ItemCollectionFactory;
+import com.mycompany.pots.PermissionHandler;
 import java.util.List;
 
 /**
@@ -15,24 +16,40 @@ import java.util.List;
  */
 public class Product extends javax.swing.JFrame {
     private final Item User;
-    
+    private final List<String> Permissions;
     /**
      * Creates new form PurchaseOrder
      * @param User
+     * @param Permissions
      */
-    public Product(Item User) {
-        initComponents();
-        this.User = User;
-        
-        setTitle("Product");
-    }
     
     public Product(Item User, List<String> Permissions) {
         initComponents();
         this.User = User;
-        
+        this.Permissions = Permissions;
         setTitle("Product");
+        
+        for (int i = 0; i<4; i++){
+            this.jTabbedPane1.setEnabledAt(i, false);
+        }
+        for (int i =0; i < Permissions.size(); i++){
+            if (Permissions.get(i).equals("View")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else if (Permissions.get(i).equals("Add")){
+                this.jTabbedPane1.setEnabledAt(i,true);
+            }
+            else if (Permissions.get(i).equals("Edit")){
+                this.jTabbedPane1.setEnabledAt(i,true);
+            }
+            else{
+                this.jTabbedPane1.setEnabledAt(i,true);
+            }
+        }
     }
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,7 +60,15 @@ public class Product extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTextField1 = new javax.swing.JTextField();
         MenuButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+
+        jTextField1.setText("jTextField1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,21 +84,37 @@ public class Product extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("jButton5");
+        jTabbedPane1.addTab("View Product", jButton5);
+
+        jButton6.setText("jButton6");
+        jTabbedPane1.addTab("Add Product", jButton6);
+
+        jButton7.setText("jButton7");
+        jTabbedPane1.addTab("Edit Product", jButton7);
+
+        jButton8.setText("jButton8");
+        jTabbedPane1.addTab("Delete Product", jButton8);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(MenuButton)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(MenuButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(9, 9, 9)
                 .addComponent(MenuButton)
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -136,14 +177,26 @@ public class Product extends javax.swing.JFrame {
                     return;
                 }
             
+                
+                PermissionHandler permission = new PermissionHandler();
+                
+                List<String> PermissionList = permission.GetPermissions(User, "Product");
+                
                 System.out.println(User.getType());
                 
-                new Product(User).setVisible(true);
+                new Product(User, PermissionList).setVisible(true);
+                
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton MenuButton;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }

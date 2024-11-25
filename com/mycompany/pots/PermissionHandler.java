@@ -19,8 +19,8 @@ public class PermissionHandler {
     public PermissionHandler() {
         HashMap<String, List<String>> IMPermissions = new HashMap<>();
        
-        IMPermissions.put("Product", List.of("Add", "Edit", "Delete")); // Full Access to Item
-        IMPermissions.put("Supplier", List.of("Add", "Edit", "Delete")); // Full Access to Supplier
+        IMPermissions.put("Product", List.of("View","Add", "Edit", "Delete")); // Full Access to Item
+        IMPermissions.put("Supplier", List.of("View","Add", "Edit", "Delete")); // Full Access to Supplier
         IMPermissions.put("Stock Level", List.of("View", "Add", "Edit", "Delete")); // View and Update Stock Level
         
         HashMap<String, List<String>> SMPermissions = new HashMap<>();
@@ -30,7 +30,7 @@ public class PermissionHandler {
         SMPermissions.put("Sales Report", List.of("View")); // Generate Sales Report
         SMPermissions.put("Stock Level", List.of("View")); // View Stock Level
         SMPermissions.put("Purchase Requisition", List.of("Add")); //  View PR
-        SMPermissions.put("Purhcase Order", List.of("View")); // View PO
+        SMPermissions.put("Purchase Order", List.of("View")); // View PO
         
         HashMap<String, List<String>> PMPermissions = new HashMap<>();
         

@@ -7,6 +7,7 @@ package view;
 import DataAbstractions.Item;
 import DataAbstractions.ItemCollection;
 import DataAbstractions.ItemCollectionFactory;
+import com.mycompany.pots.PermissionHandler;
 import java.util.List;
 
 /**
@@ -15,25 +16,40 @@ import java.util.List;
  */
 public class Sales extends javax.swing.JFrame {
     private final Item User;
-    
+    private final List<String> Permissions;
     /**
      * Creates new form PurchaseOrder
      * @param User
+     * @param Permissions
      */
-    public Sales(Item User) {
-        initComponents();
-        this.User = User;
-        
-        setTitle("Sales");
-    }
+
     
     public Sales(Item User, List<String> Permissions) {
         initComponents();
         this.User = User;
-        
+        this.Permissions = Permissions;
         setTitle("Sales");
+        
+        for(int i = 0; i<4; i++){
+            this.jTabbedPane1.setEnabledAt(i,false);
+        }
+        
+        for(int i = 0; i < Permissions.size(); i++){
+            if (Permissions.get(i).equals("View")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else if (Permissions.get(i).equals("Add")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else if (Permissions.get(i).equals("Edit")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else{
+                this.jTabbedPane1.setEnabledAt(i,true);
+            }
+        }
     }
-
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,6 +60,11 @@ public class Sales extends javax.swing.JFrame {
     private void initComponents() {
 
         MenuButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,6 +80,18 @@ public class Sales extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("jButton5");
+        jTabbedPane1.addTab("View Sale", jButton5);
+
+        jButton6.setText("jButton6");
+        jTabbedPane1.addTab("Add Sale", jButton6);
+
+        jButton7.setText("jButton7");
+        jTabbedPane1.addTab("Edit Sale", jButton7);
+
+        jButton8.setText("jButton8");
+        jTabbedPane1.addTab("Delete Sale", jButton8);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -66,14 +99,20 @@ public class Sales extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(MenuButton)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(MenuButton)
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -135,15 +174,23 @@ public class Sales extends javax.swing.JFrame {
                 if (User == null) {
                     return;
                 }
-            
+                
+                PermissionHandler permission = new PermissionHandler();
+                
+                List<String> PermissionList = permission.GetPermissions(User, "Sales");
                 System.out.println(User.getType());
                 
-                new Sales(User).setVisible(true);
+                new Sales(User,PermissionList).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton MenuButton;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

@@ -7,6 +7,7 @@ package view;
 import DataAbstractions.Item;
 import DataAbstractions.ItemCollection;
 import DataAbstractions.ItemCollectionFactory;
+import com.mycompany.pots.PermissionHandler;
 import java.util.List;
 
 /**
@@ -15,23 +16,36 @@ import java.util.List;
  */
 public class StockLevel extends javax.swing.JFrame {
     private final Item User;
-    
+    private final List<String> Permissions;
     /**
      * Creates new form PurchaseOrder
      * @param User
+     * @param Permissions
      */
-    public StockLevel(Item User) {
-        initComponents();
-        this.User = User;
-        
-        setTitle("Stock Level");
-    }
     
     public StockLevel(Item User, List<String> Permissions) {
         initComponents();
         this.User = User;
-        
+        this.Permissions  = Permissions;
         setTitle("Stock Level");
+        
+        for (int i = 0; i< 4; i++){
+            this.jTabbedPane1.setEnabledAt(i,false);
+        }
+        for (int i = 0; i < Permissions.size(); i++){
+            if (Permissions.get(i).equals("View")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else if (Permissions.get(i).equals("Add")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else if (Permissions.get(i).equals("Edit")){
+                this.jTabbedPane1.setEnabledAt(i, true);
+            }
+            else{
+                this.jTabbedPane1.setEnabledAt(i,true);
+            }
+        }
     }
 
     /**
@@ -44,6 +58,11 @@ public class StockLevel extends javax.swing.JFrame {
     private void initComponents() {
 
         MenuButton = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -59,21 +78,40 @@ public class StockLevel extends javax.swing.JFrame {
             }
         });
 
+        jButton5.setText("jButton5");
+        jTabbedPane1.addTab("View Stock", jButton5);
+
+        jButton6.setText("jButton6");
+        jTabbedPane1.addTab("Add Stock", jButton6);
+
+        jButton7.setText("jButton7");
+        jTabbedPane1.addTab("Edit Stock", jButton7);
+
+        jButton8.setText("jButton8");
+        jTabbedPane1.addTab("Delete Stock", jButton8);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(MenuButton)
-                .addContainerGap(313, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(MenuButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 501, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addComponent(MenuButton)
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -136,14 +174,22 @@ public class StockLevel extends javax.swing.JFrame {
                     return;
                 }
             
+                PermissionHandler permission = new PermissionHandler();
+                
+                 List<String> PermissionList = permission.GetPermissions(User, "Stock Level");
                 System.out.println(User.getType());
                 
-                new StockLevel(User).setVisible(true);
+                new StockLevel(User, PermissionList).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton MenuButton;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JTabbedPane jTabbedPane1;
     // End of variables declaration//GEN-END:variables
 }

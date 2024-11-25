@@ -95,7 +95,7 @@ public class FileHandler implements DataWriter, DataReader {
     
     private List<List<String>> sortData(List<List<String>> Data) {
         List<List<String>> sortedData = new ArrayList<>(Data);
-        sortedData.sort( (a, b) -> { return a.getFirst().compareTo(b.getFirst()); } ); // Sorts ID Alphabetically
+        sortedData.sort( (a, b) -> { return a.get(0).compareTo(b.get(0)); } ); // Sorts ID Alphabetically
         return sortedData;
     }
 
@@ -167,7 +167,7 @@ public class FileHandler implements DataWriter, DataReader {
         while (iter.hasNext()) {
             List<String> rowData = iter.next();
 
-            if (rowData.getFirst().equals(Data.getFirst())) {
+            if (rowData.get(0).equals(Data.get(0))) {
                 this.data.remove(index);
                 this.data.add(index, Data);
             }
@@ -186,7 +186,7 @@ public class FileHandler implements DataWriter, DataReader {
         while (iter.hasNext()) {
             List<String> rowData = iter.next();
 
-            if (rowData.getFirst().equals(ID)) {
+            if (rowData.get(0).equals(ID)) {
                 this.data.remove(index);
             }
             
@@ -285,7 +285,7 @@ public class FileHandler implements DataWriter, DataReader {
     @Override
     public List<String> getRow(String Key) {
         for (List<String> rowData : this.data) {
-            if (rowData.getFirst().equals(Key)) {
+            if (rowData.get(0).equals(Key)) {
                 return rowData;
             }
         }

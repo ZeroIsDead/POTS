@@ -61,27 +61,49 @@ public class Menu extends javax.swing.JFrame {
                     switch (Resource) {
                         case "Purchase Order" -> {
                             setVisible(false);
-                            new PurchaseOrder(User).setVisible(true);
+                            
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Purchase Order");
+                            new PurchaseOrder(User, permissionList).setVisible(true);
+                            
                         }
                         case "Purchase Requisition" -> {
                             setVisible(false);
-                            new PurchaseRequisition(User).setVisible(true);
+                            
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Purchase Requisition");
+                            new PurchaseRequisition(User, permissionList).setVisible(true);
                         }
                         case "Product" -> {
                             setVisible(false);
-                            new Product(User).setVisible(true);
+                            
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Product");
+                            new Product(User, permissionList).setVisible(true);
                         }
                         case "Payment" -> {
                             setVisible(false);
-                            new Payment(User).setVisible(true);
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User,"Payment");
+                            new Payment(User, permissionList).setVisible(true);
                         }
                         case "Sales" -> {
                             setVisible(false);
-                            new Sales(User).setVisible(true);
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Sales");
+                            new Sales(User, permissionList).setVisible(true);
                         }
                         case "Supplier" -> {
                             setVisible(false);
-                            new Supplier(User).setVisible(true);
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Supplier");
+                            new Sales(User, permissionList).setVisible(true);
                         }
                         case "User" -> {
                             setVisible(false);
@@ -89,11 +111,17 @@ public class Menu extends javax.swing.JFrame {
                         }
                         case "Sales Report" -> {
                             setVisible(false);
-                            new SalesReport(User).setVisible(true);
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Sales Report");
+                            new Sales(User, permissionList).setVisible(true);
                         }
                         case "Stock Level" -> {
                             setVisible(false);
-                            new StockLevel(User).setVisible(true);
+                             PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "Sales Report");
+                            new Sales(User, permissionList).setVisible(true);
                         }
                         default -> {
                         }
@@ -105,10 +133,22 @@ public class Menu extends javax.swing.JFrame {
             add(button);
         }
         
+       JButton LogOutButton = new JButton("Log Out");
+       
+       LogOutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    setVisible(false);
+                    new Login().setVisible(true);
+               }
+       });
+               
+       add(LogOutButton);
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         
-        setLayout(new GridLayout(Resources.size() + 1, 1, 20, 20)); // No. Button + 1 Rows 1 Column 20 H Gap 20 V Gap
+        setLayout(new GridLayout(Resources.size() + 2, 1, 20, 20)); // No. Button + 1 Rows 1 Column 20 H Gap 20 V Gap
         
         
 
