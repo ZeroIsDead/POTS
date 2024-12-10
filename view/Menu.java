@@ -103,25 +103,30 @@ public class Menu extends javax.swing.JFrame {
                             PermissionHandler permission = new PermissionHandler();
                             
                             List<String> permissionList = permission.GetPermissions(User, "Supplier");
-                            new Sales(User, permissionList).setVisible(true);
+                            new Supplier(User, permissionList).setVisible(true);
                         }
                         case "User" -> {
                             setVisible(false);
-                            new Register(User).setVisible(true);
+                            
+                            PermissionHandler permission = new PermissionHandler();
+                            
+                            List<String> permissionList = permission.GetPermissions(User, "User");
+                            
+                            new Register(User, permissionList).setVisible(true);
                         }
                         case "Sales Report" -> {
                             setVisible(false);
                             PermissionHandler permission = new PermissionHandler();
                             
                             List<String> permissionList = permission.GetPermissions(User, "Sales Report");
-                            new Sales(User, permissionList).setVisible(true);
+                            new SalesReport(User, permissionList).setVisible(true);
                         }
                         case "Stock Level" -> {
                             setVisible(false);
                              PermissionHandler permission = new PermissionHandler();
                             
                             List<String> permissionList = permission.GetPermissions(User, "Sales Report");
-                            new Sales(User, permissionList).setVisible(true);
+                            new StockLevel(User, permissionList).setVisible(true);
                         }
                         default -> {
                         }
