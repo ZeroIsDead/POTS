@@ -124,7 +124,7 @@ public class ItemCollection {
         Boolean SameSize = Details.length == this.FieldNames.size();
         Boolean ItemFound = this.getItemIndex(Details[0]) != -1;
 
-        if (!SameSize || !ItemFound) {
+        if (!SameSize || ItemFound) {
             return null;
         }
         
