@@ -34,6 +34,8 @@ public class POTS {
 //      get PO with id 3
         Item PO = POCollection.getItem("3");
         
+        System.out.println(PO.CanBeDeleted());
+        
 //        String[] NewDetailsArray = {"3", "6", "1", "10/10/25"};
 //        List<String> NewDetails = Arrays.asList(NewDetailsArray);
 //

@@ -72,7 +72,7 @@ public class Supplier extends Item {
     public Boolean CanBeDeleted() {
         List<Item> RelatedItems = this.getDownwardsRelatedItems("Product");
             
-        if (RelatedItems.isEmpty()) {
+        if (RelatedItems == null || RelatedItems.isEmpty()) {
             return true; 
         }
         

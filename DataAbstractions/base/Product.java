@@ -118,6 +118,10 @@ public class Product extends Item {
         for (String Relations : UpwardsRelations) {
             List<Item> RelatedItems = this.getUpwardsRelatedItems(Relations);
             
+            if (RelatedItems == null) {
+                return true;
+            }
+            
             if (!RelatedItems.isEmpty()) {
                 return false; 
             }

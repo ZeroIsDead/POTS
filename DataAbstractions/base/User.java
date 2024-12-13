@@ -44,6 +44,7 @@ public class User extends Item {
     
     private List<Item> getItemRelatedToUser(String Type) {
         String ID = this.getID();
+        List<Item> ItemList = new ArrayList<>();
         
 //        Reading and Writing To The Relationship File
         this.reader.setFileName(Type);
@@ -52,10 +53,8 @@ public class User extends Item {
         List<List<String>> ItemDetailList = this.reader.FitlerData("UserID", ID);
         
         if (ItemDetailList.isEmpty()) {
-            return null;
+            return ItemList;
         }
-        
-        List<Item> ItemList = new ArrayList<>();
         
         for (int i = 0; i < ItemDetailList.size(); i++) {
             List<String> RowData = ItemDetailList.get(i);
@@ -77,7 +76,7 @@ public class User extends Item {
         for (String Relations : DownwardsRelations) {
             List<Item> RelatedItems = this.getDownwardsRelatedItems(Relations);
             
-            if (RelatedItems.isEmpty()) {
+            if (RelatedItems == null || RelatedItems.isEmpty()) {
                 continue; 
             }
             

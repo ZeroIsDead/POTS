@@ -190,6 +190,10 @@ public class PO extends Item {
         for (String Relations : DownwardsRelations) {
             List<Item> RelatedItems = this.getDownwardsRelatedItems(Relations);
             
+            if (RelatedItems == null) {
+                return true;
+            }
+            
             if (!RelatedItems.isEmpty()) {
                 return false; 
             }
@@ -197,6 +201,10 @@ public class PO extends Item {
         
         for (String Relations : UpwardsRelations) {
             List<Item> RelatedItems = this.getUpwardsRelatedItems(Relations);
+            
+            if (RelatedItems == null) {
+                return true;
+            }
             
             if (!RelatedItems.isEmpty()) {
                 return false; 

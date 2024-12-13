@@ -150,7 +150,7 @@ public class Payment extends Item {
 
     @Override
     public Boolean CanBeDeleted() {
-        return false;
+        return true;
     }
 
 }
