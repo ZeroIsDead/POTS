@@ -199,7 +199,7 @@ public class PR extends Item {
             List<Item> RelatedItems = this.getUpwardsRelatedItems(Relations);
             
             if (RelatedItems == null) {
-                return true;
+                continue;
             }
             
             if (!RelatedItems.isEmpty()) {
