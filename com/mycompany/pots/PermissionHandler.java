@@ -21,7 +21,7 @@ public class PermissionHandler {
        
         IMPermissions.put("Product", List.of("View","Add", "Edit", "Delete")); // Full Access to Item
         IMPermissions.put("Supplier", List.of("View","Add", "Edit", "Delete")); // Full Access to Supplier
-        IMPermissions.put("Stock Level", List.of("View", "Add", "Edit", "Delete")); // View and Update Stock Level
+        IMPermissions.put("Stock Level", List.of("View", "Edit")); // View and Update Stock Level
         
         HashMap<String, List<String>> SMPermissions = new HashMap<>();
         
@@ -54,8 +54,8 @@ public class PermissionHandler {
         AdminPermissions.put("Sales", List.of("View", "Add", "Edit", "Delete"));
         AdminPermissions.put("Supplier", List.of("View", "Add", "Edit", "Delete"));
         AdminPermissions.put("User", List.of("View", "Add", "Edit", "Delete"));
-        AdminPermissions.put("Sales Report", List.of("View", "Add", "Edit", "Delete"));
-        AdminPermissions.put("Stock Level", List.of("View", "Add", "Edit", "Delete"));
+        AdminPermissions.put("Sales Report", List.of("View"));
+        AdminPermissions.put("Stock Level", List.of("View", "Edit"));
                 
         
 //        AdminPermissions.put("");

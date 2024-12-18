@@ -52,9 +52,9 @@ public class Register extends javax.swing.JFrame {
         PasswordLabel = new javax.swing.JLabel();
         PasswordField = new javax.swing.JPasswordField();
         RoleLabel = new javax.swing.JLabel();
-        RoleField = new javax.swing.JTextField();
         RegisterButton = new javax.swing.JButton();
         MenuButton = new javax.swing.JButton();
+        RoleComboBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -82,12 +82,6 @@ public class Register extends javax.swing.JFrame {
 
         RoleLabel.setText("Role");
 
-        RoleField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RoleFieldActionPerformed(evt);
-            }
-        });
-
         RegisterButton.setText("Register");
         RegisterButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -107,15 +101,14 @@ public class Register extends javax.swing.JFrame {
             }
         });
 
+        RoleComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Purchase Manager", "Sales Manager", "Inventory Manager", "Finance Manager", "Admin" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(170, 170, 170)
-                        .addComponent(RegisterButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,9 +121,9 @@ public class Register extends javax.swing.JFrame {
                                     .addComponent(RoleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(PasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(RoleField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(PasswordField, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                                    .addComponent(RoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
@@ -144,7 +137,10 @@ public class Register extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(UsernameField, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
                                     .addComponent(FirstNameField)
-                                    .addComponent(LastNameField))))))
+                                    .addComponent(LastNameField)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(170, 170, 170)
+                        .addComponent(RegisterButton)))
                 .addContainerGap(62, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -172,12 +168,10 @@ public class Register extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PasswordLabel)
                     .addComponent(PasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(RoleLabel))
-                    .addComponent(RoleField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(RoleLabel)
+                    .addComponent(RoleComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(RegisterButton)
                 .addGap(26, 26, 26))
@@ -195,61 +189,63 @@ public class Register extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_UsernameFieldActionPerformed
 
-    private void RoleFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoleFieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RoleFieldActionPerformed
-
     private void RegisterButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_RegisterButtonMouseClicked
         // TODO add your handling code here:
         ItemCollectionFactory Factory = new ItemCollectionFactory();
         
         ItemCollection UserCollection = Factory.createItemCollection("User");
         
-        if (UsernameField.getText().isBlank()) {
+        String Username = UsernameField.getText();
+        String FirstName = FirstNameField.getText();
+        String LastName = LastNameField.getText();
+        String Password = PasswordField.getText();
+        String Role = RoleComboBox.getSelectedItem().toString();
+        
+        if (Username.isBlank()) {
             UsernameField.requestFocus();
             return;
         }
         
-        if (FirstNameField.getText().isBlank()) {
+        if (FirstName.isBlank()) {
             FirstNameField.requestFocus();
             return;
         }
                 
-        if (LastNameField.getText().isBlank()) {
+        if (LastName.isBlank()) {
             LastNameField.requestFocus();
             return;
         }
                         
-        if (PasswordField.getText().isBlank()) {
+        if (Password.isBlank()) {
             PasswordField.requestFocus();
             return;
         }
          
         
-        List<String> AvailableRoles = List.of("SM", "PM", "IM", "FM", "Admin");
+        List<String> AvailableRoles = List.of("Sales Manager", "Purchase Manager", "Inventory Manager", "Finance Manager", "Admin");
+        List<String> WrittenRoles = List.of("SM", "PM", "IM", "FM", "admin");
                                 
-        if (RoleField.getText().isBlank() || AvailableRoles.contains(RoleField.getText())) {
-            RoleField.requestFocus();
+        if (Role.isBlank() || !AvailableRoles.contains(Role)) {
+            RoleComboBox.requestFocus();
             return;
         }
-        
-        String Username = UsernameField.getText();
-        String FirstName = FirstNameField.getText();
-        String LastName = LastNameField.getText();
-        String Password = PasswordField.getText();
-        String Role = RoleField.getText();
 
-        String[] UserDetails = {Username, FirstName, LastName, Password, Role};
+        // MAP Sales Manager to SM, Purchase Manager to PM, etc
+        String WrittenRole = WrittenRoles.get(AvailableRoles.indexOf(Role));
+        
+        String[] UserDetails = {Username, FirstName, LastName, Password, WrittenRole};
         
         Item newUser = UserCollection.createItem(UserDetails);
         
         if (newUser == null) {
-            new Menu(this.User).setVisible(true);
+            javax.swing.JOptionPane.showMessageDialog(this, "User Cannot Be Created!",
+               "Error Window", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
         
         
-        System.out.println("Error");
+        javax.swing.JOptionPane.showMessageDialog(this, "User Successfuly Created!",
+               "Information Window", javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_RegisterButtonMouseClicked
 
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
@@ -324,7 +320,7 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JPasswordField PasswordField;
     private javax.swing.JLabel PasswordLabel;
     private javax.swing.JButton RegisterButton;
-    private javax.swing.JTextField RoleField;
+    private javax.swing.JComboBox<String> RoleComboBox;
     private javax.swing.JLabel RoleLabel;
     private javax.swing.JTextField UsernameField;
     private javax.swing.JLabel UsernameLabel;
